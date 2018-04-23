@@ -303,6 +303,8 @@ public class BluetoothManager
         {
             String nativeAPIVersion = getNativeAPIVersion();
             String APIVersion = BluetoothManager.class.getPackage().getSpecificationVersion();
+
+            /*
             if (APIVersion.equals(nativeAPIVersion) == false) {
                 String[] nativeAPIVersionCode = nativeAPIVersion.split("\\D");
                 String[] APIVersionCode = APIVersion.split("\\D");
@@ -320,6 +322,7 @@ public class BluetoothManager
                     System.err.println("Java library is out of date. Please update the Java library.");
                 else System.err.println("Native library is out of date. Please update the native library.");
             }
+            */
             inst = new BluetoothManager();
             inst.init();
         }
