@@ -1,9 +1,6 @@
 package berlin.intero.sentientlighthubplayground
 
-import tinyb.BluetoothDevice
-import tinyb.BluetoothException
-import tinyb.BluetoothManager
-import tinyb.BluetoothNotification
+import tinyb.*
 
 class TinybController
 private constructor() : BluetoothNotification<ByteArray> {
@@ -31,7 +28,7 @@ private constructor() : BluetoothNotification<ByteArray> {
             return emptyList()
         }
 
-        println("Starting scan")
+        println("Start scan")
 
         for (i in 0..SCAN_DURATION - 1) {
             print(".")
@@ -49,10 +46,61 @@ private constructor() : BluetoothNotification<ByteArray> {
     }
 
     fun showDevices(devices: List<BluetoothDevice>) {
-        println("Showing devices")
+        println("Show devices")
         var i = 0
         for (device in devices) {
             println("# ${++i} ${device.address} ${device.name} ${device.connected}")
+        }
+    }
+
+    fun connectDevice(device: BluetoothDevice) {
+        println("Connect device ${device.address} ${device.name}")
+        try {
+            if (device.connect()) {
+                println("Paired : ${device.paired}")
+                println("Trusted: ${device.trusted}")
+            } else {
+                println("Could not connect device")
+                System.exit(-1)
+            }
+        } catch (e: BluetoothException) {
+            println("$e")
+        }
+    }
+
+    fun showServices(device: BluetoothDevice) {
+        println("Show service")
+
+        var bluetoothServices: List<BluetoothGattService>
+
+        for (i in 1..10) {
+            ensureConnection(device)
+
+            bluetoothServices = device.services
+
+            for (service in bluetoothServices) {
+                println("     Service " + service.uuid)
+                for (characteristic in service.characteristics) {
+                    println("      Characteristic ${characteristic.uuid}")
+                }
+            }
+        }
+    }
+
+    fun ensureConnection(device: BluetoothDevice) {
+        try {
+            while (!device.connected) {
+                device.connect()
+                if (!device.connected) {
+                    print(".")
+                    Thread.sleep(1000)
+                } else {
+                    println("Connected")
+                    break
+                }
+            }
+        } catch (e: BluetoothException) {
+            println("$e")
         }
     }
 

@@ -10,7 +10,7 @@ class SentientLightHubPlaygroundApplication
 fun main(args: Array<String>) {
     runApplication<SentientLightHubPlaygroundApplication>(*args)
 
-    println("Sentient Light Hub");
+    println("Sentient Light Hub")
 
     val tinybController = TinybController.getInstance()
 
@@ -18,4 +18,8 @@ fun main(args: Array<String>) {
     val device: BluetoothDevice
 
     devices = tinybController.scanDevices()
+    device = devices[0]
+
+    tinybController.connectDevice(device)
+    tinybController.showServices(device)
 }
