@@ -1,0 +1,14 @@
+{
+  "beacons": [
+    {
+      "address": "4D:FA:10:CC:26:0D",
+      "sensors": [
+        {
+          "id": 1,
+          "topic": "floorsensor/O1/",
+          "checkerboardID": "1"
+        }
+      ]
+    }
+  ]
+}
