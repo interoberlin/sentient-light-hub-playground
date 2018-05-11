@@ -118,11 +118,14 @@ private constructor() : BluetoothNotification<ByteArray> {
     }
 
     fun readCharacteristic(device: BluetoothDevice, characteristicID: String): ByteArray {
+        log.info("Read characteristic ${characteristicID}")
         for (service in device.services) {
             for (characteristic in service.characteristics) {
                 if (characteristicID == characteristic.uuid) {
                     ensureConnection(device)
-                    return characteristic.readValue()
+                    val value = characteristic.readValue()
+                    log.info("Value ${String(value)}")
+                    return value
                 }
             }
         }
