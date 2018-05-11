@@ -49,6 +49,7 @@ dependencies {
 	compile("org.jetbrains.kotlin:kotlin-reflect")
 
 	compile ('commons-io:commons-io:2.5')
+	compile ('log4j:log4j:1.2.17')
 	compile ('com.google.code.gson:gson:2.7')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')

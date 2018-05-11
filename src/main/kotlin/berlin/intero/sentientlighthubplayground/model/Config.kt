@@ -1,3 +1,3 @@
 package berlin.intero.sentientlighthubplayground.model
 
-data class Config(val beacons: List<Beacon>)
+data class Config(val devices: List<Device>)

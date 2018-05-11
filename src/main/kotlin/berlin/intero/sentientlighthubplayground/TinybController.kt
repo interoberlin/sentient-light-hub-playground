@@ -5,10 +5,14 @@ import com.google.gson.GsonBuilder
 import org.apache.commons.io.IOUtils
 import tinyb.*
 import java.io.IOException
+import java.util.logging.Logger
 
 class TinybController
 private constructor() : BluetoothNotification<ByteArray> {
+    var config: Config? = null
+
     companion object {
+        val log = Logger.getLogger(TinybController::class.simpleName)
         private const val SCAN_DURATION = 2
 
         private var inst: TinybController? = null
@@ -24,60 +28,61 @@ private constructor() : BluetoothNotification<ByteArray> {
 
     @Throws(InterruptedException::class)
     fun scanDevices(): List<BluetoothDevice> {
+        log.fine("Start scan")
+
         val manager = BluetoothManager.getBluetoothManager()
         try {
             manager.startDiscovery()
         } catch (e: BluetoothException) {
-            println("$e")
+            log.severe("$e")
             return emptyList()
         }
 
-        println("Start scan")
-
         for (i in 0 until SCAN_DURATION) {
-            print(".")
+            log.fine(".")
             Thread.sleep(1000)
         }
 
         try {
             manager.stopDiscovery()
         } catch (e: BluetoothException) {
-            println("Discovery could not be stopped.")
+            log.warning("Discovery could not be stopped.")
         }
 
         showDevices(manager.devices)
         return manager.devices
     }
 
-    fun showDevices(devices: List<BluetoothDevice>) {
-        println("Show devices")
-        var i = 0
-        for (device in devices) {
-            println("# ${++i} ${device.address} ${device.name} ${device.connected}")
+    private fun showDevices(devices: List<BluetoothDevice>) {
+        log.fine("Show devices")
+
+        for ((i, device) in devices.withIndex()) {
+            log.info("# ${i + 1} ${device.address} ${device.name} ${device.connected}")
         }
     }
 
     fun connectDevice(device: BluetoothDevice): Boolean {
-        println("Connect device ${device.address} ${device.name}")
+        log.fine("Connect device ${device.address} ${device.name}")
+
         try {
             return if (device.connect()) {
-                println("Paired : ${device.paired}")
-                println("Trusted: ${device.trusted}")
+                log.info("Paired : ${device.paired}")
+                log.info("Trusted: ${device.trusted}")
                 true
             } else {
-                println("Could not connect device")
+                log.warning("Could not connect device")
                 System.exit(-1)
                 false
             }
         } catch (e: BluetoothException) {
-            println("$e")
+            log.info("$e")
         }
 
         return false
     }
 
     fun showServices(device: BluetoothDevice) {
-        println("Show service")
+        log.fine("Show service")
 
         var bluetoothServices: List<BluetoothGattService>
 
@@ -87,28 +92,28 @@ private constructor() : BluetoothNotification<ByteArray> {
             bluetoothServices = device.services
 
             for (service in bluetoothServices) {
-                println("     Service " + service.uuid)
+                log.info("     Service " + service.uuid)
                 for (characteristic in service.characteristics) {
-                    println("      Characteristic ${characteristic.uuid}")
+                    log.info("      Characteristic ${characteristic.uuid}")
                 }
             }
         }
     }
 
-    fun ensureConnection(device: BluetoothDevice) {
+    private fun ensureConnection(device: BluetoothDevice) {
         try {
             while (!device.connected) {
                 device.connect()
                 if (!device.connected) {
-                    print(".")
+                    log.finer(".")
                     Thread.sleep(1000)
                 } else {
-                    println("Connected")
+                    log.info("Connected")
                     break
                 }
             }
         } catch (e: BluetoothException) {
-            println("$e")
+            log.severe("$e")
         }
     }
 
@@ -125,22 +130,14 @@ private constructor() : BluetoothNotification<ByteArray> {
         return ByteArray(0)
     }
 
-    fun loadConfig() {
-        try {
-            val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream("config.json"));
-            val config = GsonBuilder().create().fromJson(result, Config::class.java) as Config
-            println(config)
-
-            // val sensor = Sensor(0, "topic", "checker")
-            // val beacon = Beacon("address", mutableListOf(sensor))
-            // val config = Config(mutableListOf(beacon))
-            // println(Gson().toJson(config))
-        } catch (e: IOException) {
-            e.printStackTrace();
-        }
+    fun loadConfig() = try {
+        val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream("config.json"));
+        this.config = GsonBuilder().create().fromJson(result, Config::class.java) as Config
+    } catch (e: IOException) {
+        log.severe("$e")
     }
 
     override fun run(value: ByteArray?) {
-        println("PING")
+        log.fine("PING")
     }
 }

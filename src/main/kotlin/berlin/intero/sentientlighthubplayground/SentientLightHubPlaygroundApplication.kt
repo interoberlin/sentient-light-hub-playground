@@ -2,35 +2,36 @@ package berlin.intero.sentientlighthubplayground
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import java.util.logging.Logger
 
 @SpringBootApplication
 class SentientLightHubPlaygroundApplication
 
 fun main(args: Array<String>) {
     runApplication<SentientLightHubPlaygroundApplication>(*args)
+    val log = Logger.getLogger(SentientLightHubPlaygroundApplication::class.simpleName)
 
-    println("Sentient Light Hub")
-
+    log.info("Sentient Light Hub")
 
     val tinybController = TinybController.getInstance()
 
     tinybController.loadConfig()
 
-    /*
-    val devices: List<BluetoothDevice>
-    val device: BluetoothDevice
+    val scannedDevices = tinybController.scanDevices()
+    val intendedDevices = tinybController.config?.devices
 
-    devices = tinybController.scanDevices()
-    device = devices[0]
+    intendedDevices?.forEach { intendedDevice ->
+        val devices = scannedDevices.filter { d -> d.address == intendedDevice.address }
 
-    tinybController.connectDevice(device)
-
-    while(!tinybController.connectDevice(device)) {
-        Thread.sleep(1000)
+        if (!devices.isEmpty()) {
+            val device = devices.first()
+            while (!tinybController.connectDevice(device)) {
+                Thread.sleep(1000)
+            }
+            tinybController.showServices(device)
+        } else {
+            log.warning("Device ${intendedDevice.address} not found")
+        }
+        // tinybController.readCharacteristic()
     }
-
-    tinybController.showServices(device)
-
-    // tinybController.readCharacteristic()
-    */
 }
