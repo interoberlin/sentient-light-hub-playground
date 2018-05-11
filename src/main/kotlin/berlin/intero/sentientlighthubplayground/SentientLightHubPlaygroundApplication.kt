@@ -40,8 +40,19 @@ fun main(args: Array<String>) {
             // TODO parse value here
 
             intendedDevice.sensors.forEach { s ->
+                log.info("Subscribe")
+                mqttController.subscribe("/sentientlight/${s.topic}")
+
+                log.info("Publish ${s.id}")
                 mqttController.publish("/sentientlight/${s.topic}", "${System.currentTimeMillis()} $value")
             }
+
+            while (true) {
+                Thread.sleep(5000)
+                log.info(".")
+            }
+
+            log.info("END")
         } else {
             log.warning("Device ${intendedDevice.address} not found")
         }

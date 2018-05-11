@@ -1,5 +1,7 @@
 package berlin.intero.sentientlighthubplayground
 
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
+import org.eclipse.paho.client.mqttv3.MqttCallback
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import java.util.logging.Logger
@@ -30,5 +32,29 @@ class MqttController {
 
         log.info("MQTT client disconnect")
         client.disconnect()
+    }
+
+    fun subscribe(topic: String) {
+        log.info("MQTT subscribe")
+
+        val client = MqttClient("tcp://localhost:8883", MqttClient.generateClientId())
+        client.setCallback(object : MqttCallback {
+            override fun messageArrived(topic: String?, message: MqttMessage?) {
+                log.info("MQTT message arrived $topic ${String(message?.getPayload()!!)}")
+            }
+
+            override fun connectionLost(cause: Throwable?) {
+                log.info("MQTT connection lost")
+            }
+
+            override fun deliveryComplete(token: IMqttDeliveryToken?) {
+                log.info("MQTT delivery complete")
+
+            }
+        }
+        )
+
+        client.connect()
+        client.subscribe(topic)
     }
 }
