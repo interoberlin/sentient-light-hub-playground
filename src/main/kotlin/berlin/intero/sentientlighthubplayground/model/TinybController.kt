@@ -1,16 +1,10 @@
-package berlin.intero.sentientlighthubplayground
+package berlin.intero.sentientlighthubplayground.model
 
-import berlin.intero.sentientlighthubplayground.model.Config
-import com.google.gson.GsonBuilder
-import org.apache.commons.io.IOUtils
 import tinyb.*
-import java.io.IOException
 import java.util.logging.Logger
 
 class TinybController
 private constructor() : BluetoothNotification<ByteArray> {
-    var config: Config? = null
-
     companion object {
         val log = Logger.getLogger(TinybController::class.simpleName)
         private const val SCAN_DURATION = 2
@@ -131,13 +125,6 @@ private constructor() : BluetoothNotification<ByteArray> {
         }
 
         return ByteArray(0)
-    }
-
-    fun loadConfig() = try {
-        val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream("config.json"));
-        this.config = GsonBuilder().create().fromJson(result, Config::class.java) as Config
-    } catch (e: IOException) {
-        log.severe("$e")
     }
 
     override fun run(value: ByteArray?) {

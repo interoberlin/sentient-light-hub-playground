@@ -1,29 +1,29 @@
 package berlin.intero.sentientlighthubplayground
 
+import berlin.intero.sentientlighthubplayground.model.ConfigController
+import berlin.intero.sentientlighthubplayground.model.MqttController
+import berlin.intero.sentientlighthubplayground.model.TinybController
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import java.util.logging.Logger
 
-
 @SpringBootApplication
 class SentientLightHubPlaygroundApplication
-
-const val characteristic_sensor = "00002014-0000-1000-8000-00805f9b34fb"
 
 fun main(args: Array<String>) {
     runApplication<SentientLightHubPlaygroundApplication>(*args)
     val log = Logger.getLogger(SentientLightHubPlaygroundApplication::class.simpleName)
 
+    log.info("Sentient Light Hub Playground")
 
-    log.info("Sentient Light Hub")
-
+    val configController = ConfigController.getInstance()
     val tinybController = TinybController.getInstance()
     val mqttController = MqttController.getInstance()
 
-    tinybController.loadConfig()
+    configController.loadConfig()
 
     val scannedDevices = tinybController.scanDevices()
-    val intendedDevices = tinybController.config?.devices
+    val intendedDevices = configController.config?.devices
 
     intendedDevices?.forEach { intendedDevice ->
         val devices = scannedDevices.filter { d -> d.address == intendedDevice.address }
@@ -35,16 +35,16 @@ fun main(args: Array<String>) {
             }
             // tinybController.showServices(device)
 
-            val value = tinybController.readCharacteristic(device, characteristic_sensor)
+            val value = tinybController.readCharacteristic(device, SentientProperties.characteristic_sensor)
 
             // TODO parse value here
 
             intendedDevice.sensors.forEach { s ->
                 log.info("Subscribe")
-                mqttController.subscribe("/sentientlight/${s.topic}")
+                mqttController.subscribe("${SentientProperties.topic_base}/${s.topic}")
 
                 log.info("Publish ${s.id}")
-                mqttController.publish("/sentientlight/${s.topic}", "${System.currentTimeMillis()} $value")
+                mqttController.publish("${SentientProperties.topic_base}/${s.topic}", "${System.currentTimeMillis()} $value")
             }
 
             while (true) {

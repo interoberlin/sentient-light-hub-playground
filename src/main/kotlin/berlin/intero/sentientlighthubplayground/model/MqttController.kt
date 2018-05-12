@@ -1,4 +1,4 @@
-package berlin.intero.sentientlighthubplayground
+package berlin.intero.sentientlighthubplayground.model
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallback
