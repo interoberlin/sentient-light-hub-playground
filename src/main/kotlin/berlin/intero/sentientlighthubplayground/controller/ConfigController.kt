@@ -1,5 +1,6 @@
-package berlin.intero.sentientlighthubplayground.model
+package berlin.intero.sentientlighthubplayground.controller
 
+import berlin.intero.sentientlighthubplayground.model.Config
 import com.google.gson.GsonBuilder
 import org.apache.commons.io.IOUtils
 import java.io.IOException
@@ -11,7 +12,6 @@ class ConfigController {
 
     companion object {
         val log = Logger.getLogger(ConfigController::class.simpleName)
-        private const val SCAN_DURATION = 2
 
         private var inst: ConfigController? = null
 

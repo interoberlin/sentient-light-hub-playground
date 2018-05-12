@@ -1,5 +1,7 @@
-package berlin.intero.sentientlighthubplayground.model
+package berlin.intero.sentientlighthubplayground.controller
 
+import berlin.intero.sentientlighthubplayground.BluetoothConnectionException
+import berlin.intero.sentientlighthubplayground.SentientProperties
 import tinyb.*
 import java.util.logging.Logger
 
@@ -7,7 +9,6 @@ class TinybController
 private constructor() : BluetoothNotification<ByteArray> {
     companion object {
         val log = Logger.getLogger(TinybController::class.simpleName)
-        private const val SCAN_DURATION = 2
 
         private var inst: TinybController? = null
 
@@ -32,9 +33,9 @@ private constructor() : BluetoothNotification<ByteArray> {
             return emptyList()
         }
 
-        for (i in 0 until SCAN_DURATION) {
+        for (i in 0 until SentientProperties.GATT_SCAN_RETRY) {
             log.fine(".")
-            Thread.sleep(1000)
+            Thread.sleep(SentientProperties.GATT_SCAN_DURATION)
         }
 
         try {
@@ -69,7 +70,7 @@ private constructor() : BluetoothNotification<ByteArray> {
                 false
             }
         } catch (e: BluetoothException) {
-            log.info("$e")
+            log.severe("$e")
         }
 
         return false
@@ -94,21 +95,19 @@ private constructor() : BluetoothNotification<ByteArray> {
         }
     }
 
-    private fun ensureConnection(device: BluetoothDevice) {
-        try {
-            while (!device.connected) {
-                device.connect()
-                if (!device.connected) {
-                    log.finer(".")
-                    Thread.sleep(1000)
-                } else {
-                    log.info("Connected")
-                    break
-                }
+    @Throws(BluetoothException::class, BluetoothConnectionException::class)
+    fun ensureConnection(device: BluetoothDevice) {
+        repeat(SentientProperties.GATT_CONNECTION_RETRY, {
+            if (!connectDevice(device)) {
+                log.finer(".")
+                Thread.sleep(SentientProperties.GATT_CONNECTION_IDLE)
+            } else {
+                log.info("Connected")
+                return
             }
-        } catch (e: BluetoothException) {
-            log.severe("$e")
-        }
+        })
+
+        throw BluetoothConnectionException("Cannot connect to device")
     }
 
     fun readCharacteristic(device: BluetoothDevice, characteristicID: String): ByteArray {
