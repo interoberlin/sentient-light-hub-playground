@@ -1,6 +1,6 @@
 package berlin.intero.sentientlighthubplayground.controller
 
-import berlin.intero.sentientlighthubplayground.BluetoothConnectionException
+import berlin.intero.sentientlighthubplayground.exceptions.BluetoothConnectionException
 import berlin.intero.sentientlighthubplayground.SentientProperties
 import tinyb.*
 import java.util.logging.Logger

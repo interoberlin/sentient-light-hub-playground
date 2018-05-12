@@ -1,3 +1,3 @@
-package berlin.intero.sentientlighthubplayground
+package berlin.intero.sentientlighthubplayground.exceptions
 
 class BluetoothConnectionException internal constructor(msg: String) : RuntimeException(msg)

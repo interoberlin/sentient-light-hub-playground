@@ -1,9 +1,11 @@
-package berlin.intero.sentientlighthubplayground
+package berlin.intero.sentientlighthubplayground.tasks
 
+import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.controller.ConfigController
 import berlin.intero.sentientlighthubplayground.controller.MqttController
 import berlin.intero.sentientlighthubplayground.controller.SentientController
 import berlin.intero.sentientlighthubplayground.controller.TinybController
+import berlin.intero.sentientlighthubplayground.exceptions.BluetoothConnectionException
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import tinyb.BluetoothException
