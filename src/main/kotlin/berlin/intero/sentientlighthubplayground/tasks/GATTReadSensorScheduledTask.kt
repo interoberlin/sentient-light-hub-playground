@@ -1,41 +1,38 @@
 package berlin.intero.sentientlighthubplayground.tasks
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
-import berlin.intero.sentientlighthubplayground.controller.ConfigController
-import berlin.intero.sentientlighthubplayground.controller.MqttController
 import berlin.intero.sentientlighthubplayground.controller.SentientController
 import berlin.intero.sentientlighthubplayground.controller.TinybController
 import berlin.intero.sentientlighthubplayground.exceptions.BluetoothConnectionException
+import org.springframework.core.task.SimpleAsyncTaskExecutor
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import tinyb.BluetoothException
 import java.util.logging.Logger
 
 @Component
-class ReadSensorTask {
+class GATTReadSensorScheduledTask {
     companion object {
-        val log = Logger.getLogger(TinybController::class.simpleName)
-        val configController = ConfigController.getInstance()
+        val log: Logger = Logger.getLogger(GATTReadSensorScheduledTask::class.simpleName)
         val sentientController = SentientController.getInstance()
         val tinybController = TinybController.getInstance()
-        val mqttController = MqttController.getInstance()
     }
 
     init {
-        configController.loadConfig()
+        sentientController.loadConfig()
     }
 
     @Scheduled(fixedRate = SentientProperties.SENSOR_READ_RATE)
     fun readSensor() {
-        log.info("-- READ SENSOR TASK")
+        log.info("-- GATT READ SENSOR TASK")
 
         val scannedDevices = tinybController.scanDevices()
-        val intendedDevices = configController.config?.devices
+        val intendedDevices = sentientController.config?.devices
 
         // Iterate over intended devices
         intendedDevices?.forEach { intendedDevice ->
             try {
-                val device = scannedDevices.filter { d -> d.address == intendedDevice.address }.first()
+                val device = scannedDevices.first { d -> d.address == intendedDevice.address }
 
                 // Ensure connection
                 tinybController.ensureConnection(device)
@@ -48,9 +45,14 @@ class ReadSensorTask {
 
                 // Publish values
                 intendedDevice.sensors.forEach { s ->
-                    mqttController.publish(SentientProperties.MQTT_SERVER_URI,
-                            "${SentientProperties.TOPIC_BASE}/${s.topic}",
-                            "${System.currentTimeMillis()} $parsedValue")
+                    log.info("topic $s.topic")
+                    log.info("parsedValue $parsedValue")
+
+                    // Call MQTTPublishAsyncTask
+                    val mqttPublishAsyncTask = MQTTPublishAsyncTask()
+                    mqttPublishAsyncTask.topic = s.topic
+                    mqttPublishAsyncTask.value = parsedValue
+                    SimpleAsyncTaskExecutor().execute(mqttPublishAsyncTask)
                 }
             } catch (ex: Exception) {
                 when (ex) {

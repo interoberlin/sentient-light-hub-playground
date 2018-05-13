@@ -29,7 +29,7 @@ class MqttController {
      * @param messageString message to be sent
     */
     fun publish(mqttServerURI: String, topic: String, messageString: String) {
-        log.fine("MQTT publish")
+        log.fine("Publish")
 
         // Connect to MQTT broker
         val client = MqttClient(mqttServerURI, MqttClient.generateClientId())
@@ -39,11 +39,11 @@ class MqttController {
         val message = MqttMessage(messageString.toByteArray())
 
         // Publish mesage
-        log.info("MQTT publish ${topic} : ${messageString}")
+        log.info("Publish ${topic} : ${messageString}")
         client.publish(topic, message)
 
         // Disconnect from MQTT broker
-        log.info("MQTT client disconnect")
+        log.info("Client disconnect")
         client.disconnect()
     }
 
@@ -54,23 +54,30 @@ class MqttController {
      * @param topic MQTT topic to subscribe
      */
     fun subscribe(mqttServerURI: String, topic: String) {
-        log.fine("MQTT subscribe")
-
-        val client = MqttClient(mqttServerURI, MqttClient.generateClientId())
-        client.setCallback(object : MqttCallback {
+        subscribe(mqttServerURI, topic, object: MqttCallback{
             override fun messageArrived(topic: String?, message: MqttMessage?) {
-                log.info("MQTT message arrived $topic ${String(message?.getPayload()!!)}")
+                log.info("Message arrived $topic ${String(message?.getPayload()!!)}")
             }
 
             override fun connectionLost(cause: Throwable?) {
-                log.info("MQTT connection lost")
+                log.info("Connection lost")
             }
 
             override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                log.info("MQTT delivery complete")
-
+                log.info("Delivery complete")
             }
         })
+    }
+
+    /**
+     *
+     */
+    fun subscribe(mqttServerURI: String, topic: String, callback: MqttCallback?) {
+        log.fine("MQTT subscribe")
+
+        // Generate client and set callback
+        val client = MqttClient(mqttServerURI, MqttClient.generateClientId())
+        client.setCallback(callback)
 
         // Connect to MQTT broker and subscribe topic
         client.connect()
