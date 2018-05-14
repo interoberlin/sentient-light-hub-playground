@@ -11,6 +11,7 @@ import tinyb.BluetoothException
 import java.util.logging.Logger
 
 @Component
+@SuppressWarnings("unused")
 class GATTReadSensorScheduledTask {
     companion object {
         val log: Logger = Logger.getLogger(GATTReadSensorScheduledTask::class.simpleName)
@@ -37,21 +38,22 @@ class GATTReadSensorScheduledTask {
                 // Ensure connection
                 tinybController.ensureConnection(device)
 
-                // Read value
-                val value = tinybController.readCharacteristic(device, SentientProperties.CHARACTERISTIC_SENSOR)
+                // Read raw value
+                val rawValue = tinybController.readCharacteristic(device, SentientProperties.CHARACTERISTIC_SENSOR)
 
-                // Parse value
-                val parsedValue = sentientController.parse(value)
+                // Parse values
+                val parsedValues = sentientController.parse(rawValue)
 
                 // Publish values
                 intendedDevice.sensors.forEach { s ->
                     log.info("topic $s.topic")
-                    log.info("parsedValue $parsedValue")
+                    log.info("index $s.index")
+                    log.info("parsedValue ${parsedValues[s.index]}")
 
                     // Call MQTTPublishAsyncTask
                     val mqttPublishAsyncTask = MQTTPublishAsyncTask()
-                    mqttPublishAsyncTask.topic = s.topic
-                    mqttPublishAsyncTask.value = parsedValue
+                    mqttPublishAsyncTask.topic = "${SentientProperties.TOPIC_SENSOR}/${s.checkerboardID}"
+                    mqttPublishAsyncTask.value = parsedValues.getOrElse(s.index) { -1 }.toString()
                     SimpleAsyncTaskExecutor().execute(mqttPublishAsyncTask)
                 }
             } catch (ex: Exception) {
@@ -71,4 +73,3 @@ class GATTReadSensorScheduledTask {
         }
     }
 }
-

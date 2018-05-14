@@ -1,3 +1,3 @@
 package berlin.intero.sentientlighthubplayground.model
 
-data class Sensor(val id: Int, val topic: String, val checkerboardID: String)
+data class Sensor(val index: Int, val checkerboardID: String)

@@ -33,13 +33,12 @@ class MQTTSubscribeAsyncTask : Runnable {
             intendedDevice.sensors.forEach { s ->
                 if (callback != null) {
                     mqttController.subscribe(SentientProperties.MQTT_SERVER_URI,
-                            "${SentientProperties.TOPIC_BASE}/${s.topic}", callback)
+                            "${SentientProperties.TOPIC_SENSOR}/${s.checkerboardID}", callback)
                 } else {
                     mqttController.subscribe(SentientProperties.MQTT_SERVER_URI,
-                            "${SentientProperties.TOPIC_BASE}/${s.topic}")
+                            "${SentientProperties.TOPIC_SENSOR}/${s.checkerboardID}")
                 }
             }
         }
     }
 }
-

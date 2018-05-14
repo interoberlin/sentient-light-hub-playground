@@ -9,6 +9,7 @@ class SentientProperties {
     companion object {
         const val CHARACTERISTIC_SENSOR = "00002014-0000-1000-8000-00805f9b34fb"
         const val TOPIC_BASE = "/sentientlight"
+        const val TOPIC_SENSOR = "$TOPIC_BASE/floorsensor"
 
         const val GATT_CONNECTION_RETRY = 10
         const val GATT_CONNECTION_IDLE = 5000L
