@@ -17,9 +17,10 @@ class MQTTPublishAsyncTask : Runnable {
 
     override fun run() {
         log.info("-- MQTT PUBLISH TASK")
+        log.info("topic/value $topic / $value")
 
         // Publish values
         mqttController.publish(SentientProperties.MQTT_SERVER_URI,
-                "${SentientProperties.TOPIC_BASE}/$topic", value)
+                topic, value)
     }
 }

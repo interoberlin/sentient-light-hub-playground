@@ -1,7 +1,7 @@
 package berlin.intero.sentientlighthubplayground.controller
 
-import berlin.intero.sentientlighthubplayground.exceptions.BluetoothConnectionException
 import berlin.intero.sentientlighthubplayground.SentientProperties
+import berlin.intero.sentientlighthubplayground.exceptions.BluetoothConnectionException
 import tinyb.*
 import java.util.logging.Logger
 
@@ -117,7 +117,6 @@ private constructor() : BluetoothNotification<ByteArray> {
                 if (characteristicID == characteristic.uuid) {
                     ensureConnection(device)
                     val value = characteristic.readValue()
-                    log.info("Value ${String(value)}")
                     return value
                 }
             }

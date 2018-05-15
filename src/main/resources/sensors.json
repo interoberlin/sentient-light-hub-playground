@@ -1,0 +1,13 @@
+{
+  "devices": [
+    {
+      "address": "C2:CE:B6:BC:D7:5B",
+      "sensors": [
+        {
+          "index": 0,
+          "checkerboardID": "A1"
+        }
+      ]
+    }
+  ]
+}

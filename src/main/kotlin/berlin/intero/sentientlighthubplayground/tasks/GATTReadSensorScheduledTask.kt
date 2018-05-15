@@ -20,7 +20,7 @@ class GATTReadSensorScheduledTask {
     }
 
     init {
-        sentientController.loadConfig()
+        sentientController.loadSensorsConfig()
     }
 
     @Scheduled(fixedRate = SentientProperties.SENSOR_READ_RATE)
@@ -28,7 +28,7 @@ class GATTReadSensorScheduledTask {
         log.info("-- GATT READ SENSOR TASK")
 
         val scannedDevices = tinybController.scanDevices()
-        val intendedDevices = sentientController.config?.devices
+        val intendedDevices = sentientController.sensorConfig?.devices
 
         // Iterate over intended devices
         intendedDevices?.forEach { intendedDevice ->
@@ -46,10 +46,6 @@ class GATTReadSensorScheduledTask {
 
                 // Publish values
                 intendedDevice.sensors.forEach { s ->
-                    log.info("topic $s.topic")
-                    log.info("index $s.index")
-                    log.info("parsedValue ${parsedValues[s.index]}")
-
                     // Call MQTTPublishAsyncTask
                     val mqttPublishAsyncTask = MQTTPublishAsyncTask()
                     mqttPublishAsyncTask.topic = "${SentientProperties.TOPIC_SENSOR}/${s.checkerboardID}"

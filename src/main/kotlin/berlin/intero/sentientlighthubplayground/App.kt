@@ -6,7 +6,6 @@ import org.springframework.scheduling.annotation.EnableScheduling
 import java.util.logging.Logger
 
 
-
 @SpringBootApplication
 @EnableScheduling
 class SentientLightHubPlaygroundApplication

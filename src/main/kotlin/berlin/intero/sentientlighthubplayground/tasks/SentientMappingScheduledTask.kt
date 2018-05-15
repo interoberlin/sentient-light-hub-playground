@@ -21,27 +21,35 @@ class SentientMappingScheduledTask {
     }
 
     init {
-        sentientController.loadConfig()
+        sentientController.loadSensorsConfig()
+        sentientController.loadMappingConfig()
 
-        val mqttSubscribeAsyncTask = MQTTSubscribeAsyncTask()
-        mqttSubscribeAsyncTask.callback = object : MqttCallback {
-            override fun messageArrived(topic: String?, message: MqttMessage?) {
-                if (topic != null && message != null)
-                recentValues.put(topic, String(message.payload))
+        val m = sentientController.mappingConfig
+        log.info("m $m")
+
+        if (m != null) {
+            val mqttSubscribeAsyncTask = MQTTSubscribeAsyncTask()
+
+            mqttSubscribeAsyncTask.topic = "${SentientProperties.TOPIC_SENSOR}/${m.condition.checkerboardID}"
+            mqttSubscribeAsyncTask.callback = object : MqttCallback {
+                override fun messageArrived(topic: String?, message: MqttMessage?) {
+                    if (topic != null && message != null)
+                        recentValues.put(topic, String(message.payload))
+                }
+
+                override fun connectionLost(cause: Throwable?) {
+                    MqttController.log.info("Connection lost")
+                }
+
+                override fun deliveryComplete(token: IMqttDeliveryToken?) {
+                    MqttController.log.info("Delivery complete")
+
+                }
             }
 
-            override fun connectionLost(cause: Throwable?) {
-                MqttController.log.info("Connection lost")
-            }
-
-            override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                MqttController.log.info("Delivery complete")
-
-            }
+            // Run subscription task once
+            SimpleAsyncTaskExecutor().execute(mqttSubscribeAsyncTask)
         }
-
-        // Run subscription task once
-        SimpleAsyncTaskExecutor().execute(mqttSubscribeAsyncTask)
     }
 
     @Scheduled(fixedRate = SentientProperties.SENTIENT_MAPPING_RATE)

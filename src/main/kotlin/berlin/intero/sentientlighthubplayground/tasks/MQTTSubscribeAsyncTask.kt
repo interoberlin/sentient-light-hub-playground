@@ -10,6 +10,7 @@ import java.util.logging.Logger
 @Component
 class MQTTSubscribeAsyncTask : Runnable {
     var callback: MqttCallback? = null
+    var topic: String? = null
 
     companion object {
         val log: Logger = Logger.getLogger(MQTTSubscribeAsyncTask::class.simpleName)
@@ -18,27 +19,23 @@ class MQTTSubscribeAsyncTask : Runnable {
     }
 
     init {
-        sentientController.loadConfig()
+        sentientController.loadSensorsConfig()
+        sentientController.loadMappingConfig()
     }
 
     override fun run() {
         log.info("-- MQTT SUBSCRIBE TASK")
+        log.info("topic $topic")
 
-        val intendedDevices = sentientController.config?.devices
-
-        // Iterate over intended devices
-        intendedDevices?.forEach { intendedDevice ->
-
-            // Subscribe values
-            intendedDevice.sensors.forEach { s ->
-                if (callback != null) {
-                    mqttController.subscribe(SentientProperties.MQTT_SERVER_URI,
-                            "${SentientProperties.TOPIC_SENSOR}/${s.checkerboardID}", callback)
-                } else {
-                    mqttController.subscribe(SentientProperties.MQTT_SERVER_URI,
-                            "${SentientProperties.TOPIC_SENSOR}/${s.checkerboardID}")
-                }
+        if (topic != null) {
+            if (callback != null) {
+                mqttController.subscribe(SentientProperties.MQTT_SERVER_URI,
+                        topic as String, callback)
+            } else {
+                mqttController.subscribe(SentientProperties.MQTT_SERVER_URI,
+                        topic as String)
             }
         }
     }
 }
+
