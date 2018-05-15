@@ -62,8 +62,12 @@ class SentientMappingScheduledTask {
 
             val checkerboardID = topic.split('/').last()
 
-            if (sentientController.mappingConfig?.condition?.isFulfilled(checkerboardID, value.toIntOrNull()) ?: false)  {
-                sentientController.mappingConfig?.action?.apply()
+            if (sentientController.mappingConfig?.condition?.isFulfilled(checkerboardID, value.toIntOrNull())
+                            ?: false) {
+                val action = sentientController.mappingConfig?.action
+
+                action?.value = value
+                action?.apply()
             }
         }
     }

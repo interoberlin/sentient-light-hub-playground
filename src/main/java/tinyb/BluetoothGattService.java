@@ -28,7 +28,7 @@ import java.util.*;
 import java.time.Duration;
 
 /**
-  * Provides access to Bluetooth GATT characteristic. Follows the BlueZ adapter API
+  * Provides access to Bluetooth GATT characteristicID. Follows the BlueZ adapter API
   * available at: http://git.kernel.org/cgit/bluetooth/bluez.git/tree/doc/gatt-api.txt
   */
 public class BluetoothGattService extends BluetoothObject

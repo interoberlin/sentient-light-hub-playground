@@ -97,6 +97,8 @@ private constructor() : BluetoothNotification<ByteArray> {
 
     @Throws(BluetoothException::class, BluetoothConnectionException::class)
     fun ensureConnection(device: BluetoothDevice) {
+        log.info("Ensure connection")
+
         repeat(SentientProperties.GATT_CONNECTION_RETRY, {
             if (!connectDevice(device)) {
                 log.finer(".")
@@ -111,7 +113,7 @@ private constructor() : BluetoothNotification<ByteArray> {
     }
 
     fun readCharacteristic(device: BluetoothDevice, characteristicID: String): ByteArray {
-        log.info("Read characteristic $characteristicID")
+        log.info("Read characteristicID $characteristicID")
         for (service in device.services) {
             for (characteristic in service.characteristics) {
                 if (characteristicID == characteristic.uuid) {
@@ -123,6 +125,37 @@ private constructor() : BluetoothNotification<ByteArray> {
         }
 
         return ByteArray(0)
+    }
+
+    fun writeCharacteristic(device: BluetoothDevice, characteristicID: String, bytes: ByteArray) {
+        log.info("Write Characteristic" +
+                "\ndevice ${device.address}" +
+                "\ncharacteristicID ${characteristicID}" +
+                "\nbytes $bytes")
+
+        for (service in device.services) {
+            for (characteristic in service.characteristics) {
+                if (characteristic.uuid == characteristicID || characteristic.uuid.contains(characteristicID)) {
+                    writeCharacteristic(device, characteristic, bytes)
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Write an array of @param bytes into the specified @param characteristicID of a @param device
+     */
+    private fun writeCharacteristic(device: BluetoothDevice, characteristic: BluetoothGattCharacteristic, bytes: ByteArray) {
+        log.info("Write Characteristic")
+        ensureConnection(device)
+
+        try {
+            log.info("Write Characteristic (really)")
+            characteristic.writeValue(bytes)
+        } catch (e: BluetoothException) {
+            log.severe("$e")
+        }
     }
 
     override fun run(value: ByteArray?) {

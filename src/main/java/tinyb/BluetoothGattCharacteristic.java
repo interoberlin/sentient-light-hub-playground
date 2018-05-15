@@ -28,7 +28,7 @@ import java.util.*;
 import java.time.Duration;
 
 /**
-  * Provides access to Bluetooth GATT characteristic. Follows the BlueZ adapter API
+  * Provides access to Bluetooth GATT characteristicID. Follows the BlueZ adapter API
   * available at: http://git.kernel.org/cgit/bluetooth/bluez.git/tree/doc/gatt-api.txt
   */
 public class BluetoothGattCharacteristic extends BluetoothObject
@@ -69,14 +69,14 @@ public class BluetoothGattCharacteristic extends BluetoothObject
     }
 
     /* D-Bus method calls: */
-    /** Reads the value of this characteristic.
-      * @return A std::vector<unsgined char> containing the value of this characteristic.
+    /** Reads the value of this characteristicID.
+      * @return A std::vector<unsgined char> containing the value of this characteristicID.
       */
     public native byte[] readValue() throws BluetoothException;
 
     /**
      * Enables notifications for the value and calls run function of the BluetoothNotification
-     * object. It enables notifications for this characteristic at BLE level.
+     * object. It enables notifications for this characteristicID at BLE level.
      * @param callback A BluetoothNotification<byte[]> object. Its run function will be called
      * when a notification is issued. The run function will deliver the new value of the value
      * property.
@@ -85,11 +85,11 @@ public class BluetoothGattCharacteristic extends BluetoothObject
     /**
      * Disables notifications of the value and unregisters the callback object
      * passed through the corresponding enable method. It disables notications
-     * at BLE level for this characteristic.
+     * at BLE level for this characteristicID.
      */
     public native void disableValueNotifications();
 
-    /** Writes the value of this characteristic.
+    /** Writes the value of this characteristicID.
       * @param[in] arg_value The data as vector<uchar>
       * to be written packed in a GBytes struct
       * @return TRUE if value was written succesfully
@@ -98,34 +98,34 @@ public class BluetoothGattCharacteristic extends BluetoothObject
 
 
     /* D-Bus property accessors: */
-    /** Get the UUID of this characteristic.
-      * @return The 128 byte UUID of this characteristic, NULL if an error occurred
+    /** Get the UUID of this characteristicID.
+      * @return The 128 byte UUID of this characteristicID, NULL if an error occurred
       */
     public native String getUUID();
 
-    /** Returns the service to which this characteristic belongs to.
+    /** Returns the service to which this characteristicID belongs to.
       * @return The service.
       */
     public native BluetoothGattService getService();
 
-    /** Returns the cached value of this characteristic, if any.
-      * @return The cached value of this characteristic.
+    /** Returns the cached value of this characteristicID, if any.
+      * @return The cached value of this characteristicID.
       */
     public native byte[] getValue();
 
-    /** Returns true if notification for changes of this characteristic are
+    /** Returns true if notification for changes of this characteristicID are
       * activated.
       * @return True if notificatios are activated.
       */
     public native boolean getNotifying();
 
     /** Returns the flags this characterstic has.
-      * @return A list of flags for this characteristic.
+      * @return A list of flags for this characteristicID.
       */
     public native String[] getFlags();
 
-    /** Returns a list of BluetoothGattDescriptors this characteristic exposes.
-      * @return A list of BluetoothGattDescriptors exposed by this characteristic
+    /** Returns a list of BluetoothGattDescriptors this characteristicID exposes.
+      * @return A list of BluetoothGattDescriptors exposed by this characteristicID
       * NULL if an error occurred
       */
     public native List<BluetoothGattDescriptor> getDescriptors();
