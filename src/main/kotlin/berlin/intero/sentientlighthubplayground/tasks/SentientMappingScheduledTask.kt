@@ -56,8 +56,15 @@ class SentientMappingScheduledTask {
     fun map() {
         log.info("-- SENTIENT MAPPING TASK")
 
-        recentValues.forEach { k, v ->
-            log.info("Recent value $k > $v")
+        recentValues.forEach { topic, value ->
+            log.info("Recent value $topic > $value")
+            log.info("Condition fulfilled ${sentientController.mappingConfig?.condition?.isFulfilled(topic, value.toIntOrNull())}")
+
+            val checkerboardID = topic.split('/').last()
+
+            if (sentientController.mappingConfig?.condition?.isFulfilled(checkerboardID, value.toIntOrNull()) ?: false)  {
+                sentientController.mappingConfig?.action?.apply()
+            }
         }
     }
 }
