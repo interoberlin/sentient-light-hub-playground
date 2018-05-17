@@ -1,6 +1,6 @@
 package berlin.intero.sentientlighthubplayground.model.mapping
 
-import berlin.intero.sentientlighthubplayground.tasks.GATTWriteSensorAsyncTask
+import berlin.intero.sentientlighthubplayground.tasks.async.GATTWriteSensorAsyncTask
 import org.springframework.core.task.SimpleAsyncTaskExecutor
 import java.util.logging.Logger
 

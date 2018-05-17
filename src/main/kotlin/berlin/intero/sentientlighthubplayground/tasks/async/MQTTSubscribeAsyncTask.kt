@@ -1,4 +1,4 @@
-package berlin.intero.sentientlighthubplayground.tasks
+package berlin.intero.sentientlighthubplayground.tasks.async
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.controller.MqttController

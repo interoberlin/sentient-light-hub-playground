@@ -22,7 +22,10 @@ class SentientProperties {
         const val MQTT_SERVER_PORT = "8883"
         const val MQTT_SERVER_URI = "tcp://${MQTT_SERVER_HOST}:${MQTT_SERVER_PORT}"
 
-        const val SENSOR_READ_RATE = 1000L
-        const val SENTIENT_MAPPING_RATE = 1000L
+        const val SENSORS_SCAN_RATE = 300_000L
+        const val SENSOR_READ_RATE = 100L
+        const val SENSOR_READ_DELAY = 100L
+        const val SENTIENT_MAPPING_RATE = 100L
+        const val SENTIENT_MAPPING_DELAY = 100L
     }
 }

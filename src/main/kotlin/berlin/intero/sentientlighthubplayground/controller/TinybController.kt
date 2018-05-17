@@ -9,8 +9,10 @@ import java.util.logging.Logger
 @Controller
 class TinybController
 private constructor() : BluetoothNotification<ByteArray> {
+    var scannedDevices: MutableList<BluetoothDevice> = ArrayList()
+
     companion object {
-        val log = Logger.getLogger(TinybController::class.simpleName)
+        val log: Logger = Logger.getLogger(TinybController::class.simpleName)
 
         private var inst: TinybController? = null
 
@@ -46,11 +48,11 @@ private constructor() : BluetoothNotification<ByteArray> {
             log.warning("Discovery could not be stopped.")
         }
 
-        showDevices(manager.devices)
+        scannedDevices = manager.devices
         return manager.devices
     }
 
-    private fun showDevices(devices: List<BluetoothDevice>) {
+    fun showDevices(devices: List<BluetoothDevice>) {
         log.fine("Show devices")
 
         for ((i, device) in devices.withIndex()) {

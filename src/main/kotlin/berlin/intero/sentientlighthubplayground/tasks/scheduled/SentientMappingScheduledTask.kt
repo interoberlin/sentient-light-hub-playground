@@ -1,8 +1,9 @@
-package berlin.intero.sentientlighthubplayground.tasks
+package berlin.intero.sentientlighthubplayground.tasks.scheduled
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.controller.MqttController
 import berlin.intero.sentientlighthubplayground.controller.SentientController
+import berlin.intero.sentientlighthubplayground.tasks.async.MQTTSubscribeAsyncTask
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallback
 import org.eclipse.paho.client.mqttv3.MqttMessage
@@ -52,7 +53,7 @@ class SentientMappingScheduledTask {
         }
     }
 
-    @Scheduled(fixedRate = SentientProperties.SENTIENT_MAPPING_RATE)
+    @Scheduled(fixedDelay = SentientProperties.SENTIENT_MAPPING_DELAY)
     fun map() {
         log.info("-- SENTIENT MAPPING TASK")
 

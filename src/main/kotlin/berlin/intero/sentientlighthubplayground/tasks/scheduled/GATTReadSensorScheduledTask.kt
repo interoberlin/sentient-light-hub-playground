@@ -1,9 +1,10 @@
-package berlin.intero.sentientlighthubplayground.tasks
+package berlin.intero.sentientlighthubplayground.tasks.scheduled
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.controller.SentientController
 import berlin.intero.sentientlighthubplayground.controller.TinybController
 import berlin.intero.sentientlighthubplayground.exceptions.BluetoothConnectionException
+import berlin.intero.sentientlighthubplayground.tasks.async.MQTTPublishAsyncTask
 import org.springframework.core.task.SimpleAsyncTaskExecutor
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -11,7 +12,6 @@ import tinyb.BluetoothException
 import java.util.logging.Logger
 
 @Component
-@SuppressWarnings("unused")
 class GATTReadSensorScheduledTask {
     companion object {
         val log: Logger = Logger.getLogger(GATTReadSensorScheduledTask::class.simpleName)
@@ -23,11 +23,11 @@ class GATTReadSensorScheduledTask {
         sentientController.loadSensorsConfig()
     }
 
-    @Scheduled(fixedRate = SentientProperties.SENSOR_READ_RATE)
+    @Scheduled(fixedDelay = SentientProperties.SENSOR_READ_DELAY)
     fun readSensor() {
         log.info("-- GATT READ SENSOR TASK")
 
-        val scannedDevices = tinybController.scanDevices()
+        val scannedDevices = tinybController.scannedDevices
         val intendedDevices = sentientController.sensorConfig?.devices
 
         // Iterate over intended devices

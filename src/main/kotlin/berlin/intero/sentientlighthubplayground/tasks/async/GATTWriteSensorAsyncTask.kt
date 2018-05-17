@@ -1,6 +1,5 @@
-package berlin.intero.sentientlighthubplayground.tasks
+package berlin.intero.sentientlighthubplayground.tasks.async
 
-import berlin.intero.sentientlighthubplayground.controller.SentientController
 import berlin.intero.sentientlighthubplayground.controller.TinybController
 import berlin.intero.sentientlighthubplayground.exceptions.BluetoothConnectionException
 import org.springframework.stereotype.Component
@@ -15,18 +14,13 @@ class GATTWriteSensorAsyncTask : Runnable {
 
     companion object {
         val log: Logger = Logger.getLogger(GATTWriteSensorAsyncTask::class.simpleName)
-        val sentientController = SentientController.getInstance()
         val tinybController = TinybController.getInstance()
-    }
-
-    init {
-        sentientController.loadSensorsConfig()
     }
 
     override fun run() {
         log.info("-- GATT WRITE SENSOR TASK")
 
-        val scannedDevices = tinybController.scanDevices()
+        val scannedDevices = tinybController.scannedDevices
 
         try {
             val device = scannedDevices.first { d -> d.address == this.address }
