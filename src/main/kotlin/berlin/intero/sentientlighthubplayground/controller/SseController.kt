@@ -13,21 +13,11 @@ import javax.servlet.http.HttpServletResponse
 
 @Controller
 @CrossOrigin
-class SSEController {
-    companion object {
-        private val log = LoggerFactory.getLogger(SSEController::class.java)
-        var emitters = CopyOnWriteArrayList<SseEmitter>()
+object SseController {
 
-        private var inst: SSEController? = null
+    private val log = LoggerFactory.getLogger(SseController::class.java)
 
-        fun getInstance(): SSEController {
-            if (inst == null) {
-                inst = SSEController()
-            }
-
-            return inst as SSEController
-        }
-    }
+    var emitters = CopyOnWriteArrayList<SseEmitter>()
 
     fun send(value: String) {
         this.send(value, MediaType.TEXT_PLAIN)

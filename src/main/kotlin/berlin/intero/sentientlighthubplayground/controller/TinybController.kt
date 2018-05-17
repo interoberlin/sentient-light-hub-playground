@@ -7,23 +7,11 @@ import tinyb.*
 import java.util.logging.Logger
 
 @Controller
-class TinybController
-private constructor() : BluetoothNotification<ByteArray> {
+object TinybController: BluetoothNotification<ByteArray> {
+
+    private val log: Logger = Logger.getLogger(TinybController::class.simpleName)
+
     var scannedDevices: MutableList<BluetoothDevice> = ArrayList()
-
-    companion object {
-        val log: Logger = Logger.getLogger(TinybController::class.simpleName)
-
-        private var inst: TinybController? = null
-
-        fun getInstance(): TinybController {
-            if (inst == null) {
-                inst = TinybController()
-            }
-
-            return inst as TinybController
-        }
-    }
 
     @Throws(InterruptedException::class)
     fun scanDevices(): List<BluetoothDevice> {

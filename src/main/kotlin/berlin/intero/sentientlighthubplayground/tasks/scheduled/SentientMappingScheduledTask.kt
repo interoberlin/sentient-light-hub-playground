@@ -2,8 +2,6 @@ package berlin.intero.sentientlighthubplayground.tasks.scheduled
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.controller.ConfigurationController
-import berlin.intero.sentientlighthubplayground.controller.MqttController
-import berlin.intero.sentientlighthubplayground.controller.SentientController
 import berlin.intero.sentientlighthubplayground.tasks.async.MQTTSubscribeAsyncTask
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallback
@@ -18,16 +16,14 @@ class SentientMappingScheduledTask {
     val recentValues: MutableMap<String, String> = HashMap()
 
     companion object {
-        val log: Logger = Logger.getLogger(SentientMappingScheduledTask::class.simpleName)
-        val configurationController = ConfigurationController.getInstance()
-        val sentientController = SentientController.getInstance()
+        private val log: Logger = Logger.getLogger(SentientMappingScheduledTask::class.simpleName)
     }
 
     init {
-        configurationController.loadSensorsConfig()
-        configurationController.loadMappingConfig()
+        ConfigurationController.loadSensorsConfig()
+        ConfigurationController.loadMappingConfig()
 
-        val m = configurationController.mappingConfig
+        val m = ConfigurationController.mappingConfig
         log.info("m $m")
 
         if (m != null) {
@@ -41,12 +37,11 @@ class SentientMappingScheduledTask {
                 }
 
                 override fun connectionLost(cause: Throwable?) {
-                    MqttController.log.info("Connection lost")
+                    log.info("Connection lost")
                 }
 
                 override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                    MqttController.log.info("Delivery complete")
-
+                    log.info("Delivery complete")
                 }
             }
 
@@ -61,13 +56,13 @@ class SentientMappingScheduledTask {
 
         recentValues.forEach { topic, value ->
             log.info("Recent value $topic > $value")
-            log.info("Condition fulfilled ${configurationController.mappingConfig?.condition?.isFulfilled(topic, value.toIntOrNull())}")
+            log.info("Condition fulfilled ${ConfigurationController.mappingConfig?.condition?.isFulfilled(topic, value.toIntOrNull())}")
 
             val checkerboardID = topic.split('/').last()
 
-            if (configurationController.mappingConfig?.condition?.isFulfilled(checkerboardID, value.toIntOrNull())
+            if (ConfigurationController.mappingConfig?.condition?.isFulfilled(checkerboardID, value.toIntOrNull())
                             ?: false) {
-                val action = configurationController.mappingConfig?.action
+                val action = ConfigurationController.mappingConfig?.action
 
                 action?.value = value
                 action?.apply()

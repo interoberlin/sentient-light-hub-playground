@@ -8,12 +8,12 @@ import java.util.logging.Logger
 
 @Component
 class MQTTSubscribeAsyncTask : Runnable {
+
     var callback: MqttCallback? = null
     var topic: String? = null
 
     companion object {
-        val log: Logger = Logger.getLogger(MQTTSubscribeAsyncTask::class.simpleName)
-        val mqttController = MqttController.getInstance()
+        private val log: Logger = Logger.getLogger(MQTTSubscribeAsyncTask::class.simpleName)
     }
 
     override fun run() {
@@ -22,10 +22,10 @@ class MQTTSubscribeAsyncTask : Runnable {
 
         if (topic != null) {
             if (callback != null) {
-                mqttController.subscribe(SentientProperties.MQTT_SERVER_URI,
+                MqttController.subscribe(SentientProperties.MQTT_SERVER_URI,
                         topic as String, callback)
             } else {
-                mqttController.subscribe(SentientProperties.MQTT_SERVER_URI,
+                MqttController.subscribe(SentientProperties.MQTT_SERVER_URI,
                         topic as String)
             }
         }

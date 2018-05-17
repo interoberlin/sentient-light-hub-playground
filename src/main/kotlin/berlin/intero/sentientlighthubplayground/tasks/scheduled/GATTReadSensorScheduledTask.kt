@@ -14,23 +14,21 @@ import java.util.logging.Logger
 
 @Component
 class GATTReadSensorScheduledTask {
+
     companion object {
-        val log: Logger = Logger.getLogger(GATTReadSensorScheduledTask::class.simpleName)
-        val configurationController = ConfigurationController.getInstance()
-        val sentientController = SentientController.getInstance()
-        val tinybController = TinybController.getInstance()
+        private val log: Logger = Logger.getLogger(GATTReadSensorScheduledTask::class.simpleName)
     }
 
     init {
-        configurationController.loadSensorsConfig()
+        ConfigurationController.loadSensorsConfig()
     }
 
     @Scheduled(fixedDelay = SentientProperties.SENSOR_READ_DELAY)
     fun readSensor() {
         log.info("-- GATT READ SENSOR TASK")
 
-        val scannedDevices = tinybController.scannedDevices
-        val intendedDevices = configurationController.sensorConfig?.devices
+        val scannedDevices = TinybController.scannedDevices
+        val intendedDevices = ConfigurationController.sensorConfig?.devices
 
         // Iterate over intended devices
         intendedDevices?.forEach { intendedDevice ->
@@ -38,13 +36,13 @@ class GATTReadSensorScheduledTask {
                 val device = scannedDevices.first { d -> d.address == intendedDevice.address }
 
                 // Ensure connection
-                tinybController.ensureConnection(device)
+                TinybController.ensureConnection(device)
 
                 // Read raw value
-                val rawValue = tinybController.readCharacteristic(device, SentientProperties.CHARACTERISTIC_SENSOR)
+                val rawValue = TinybController.readCharacteristic(device, SentientProperties.CHARACTERISTIC_SENSOR)
 
                 // Parse values
-                val parsedValues = sentientController.parse(rawValue)
+                val parsedValues = SentientController.parse(rawValue)
 
                 // Publish values
                 intendedDevice.sensors.forEach { s ->

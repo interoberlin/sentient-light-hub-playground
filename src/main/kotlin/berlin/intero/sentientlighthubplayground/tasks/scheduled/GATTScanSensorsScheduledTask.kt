@@ -9,15 +9,14 @@ import java.util.logging.Logger
 @Component
 class GATTScanSensorsScheduledTask {
     companion object {
-        val log: Logger = Logger.getLogger(GATTScanSensorsScheduledTask::class.simpleName)
-        val tinybController = TinybController.getInstance()
+        private val log: Logger = Logger.getLogger(GATTScanSensorsScheduledTask::class.simpleName)
     }
 
     @Scheduled(fixedRate = SentientProperties.SENSORS_SCAN_RATE)
     fun scanDevices() {
         log.info("-- GATT SCAN SENSORS TASK")
 
-        tinybController.scanDevices()
-        tinybController.showDevices(tinybController.scannedDevices)
+        TinybController.scanDevices()
+        TinybController.showDevices(TinybController.scannedDevices)
     }
 }

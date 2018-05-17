@@ -11,23 +11,12 @@ import java.nio.charset.Charset
 import java.util.logging.Logger
 
 @Controller
-class ConfigurationController {
+object ConfigurationController {
+
+    private val log: Logger = Logger.getLogger(ConfigurationController::class.simpleName)
+
     var sensorConfig: SensorConfig? = null
     var mappingConfig: MappingConfig? = null
-
-    companion object {
-        val log: Logger = Logger.getLogger(ConfigurationController::class.simpleName)
-
-        private var inst: ConfigurationController? = null
-
-        fun getInstance(): ConfigurationController {
-            if (inst == null) {
-                inst = ConfigurationController()
-            }
-
-            return inst as ConfigurationController
-        }
-    }
 
     init {
         loadSensorsConfig()

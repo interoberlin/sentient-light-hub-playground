@@ -8,20 +8,9 @@ import org.springframework.stereotype.Controller
 import java.util.logging.Logger
 
 @Controller
-class MqttController {
-    companion object {
-        val log = Logger.getLogger(MqttController::class.simpleName)
+object MqttController {
 
-        private var inst: MqttController? = null
-
-        fun getInstance(): MqttController {
-            if (inst == null) {
-                inst = MqttController()
-            }
-
-            return inst as MqttController
-        }
-    }
+    private val log = Logger.getLogger(MqttController::class.simpleName)
 
     /**
      * Publishes a given message to a topic
@@ -29,7 +18,7 @@ class MqttController {
      * @param mqttServerURI MQTT server to connect to
      * @param topic MQTT topic to publish to
      * @param messageString message to be sent
-    */
+     */
     fun publish(mqttServerURI: String, topic: String, messageString: String) {
         log.fine("Publish")
 
@@ -45,7 +34,6 @@ class MqttController {
         client.publish(topic, message)
 
 
-
         // Disconnect from MQTT broker
         log.info("Client disconnect")
         client.disconnect()
@@ -58,7 +46,7 @@ class MqttController {
      * @param topic MQTT topic to subscribe
      */
     fun subscribe(mqttServerURI: String, topic: String) {
-        subscribe(mqttServerURI, topic, object: MqttCallback{
+        subscribe(mqttServerURI, topic, object : MqttCallback {
             override fun messageArrived(topic: String?, message: MqttMessage?) {
                 log.info("Message arrived $topic ${String(message?.getPayload()!!)}")
             }

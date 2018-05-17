@@ -6,21 +6,9 @@ import java.nio.ByteOrder
 import java.util.logging.Logger
 
 @Controller
-class SentientController {
+object SentientController {
 
-    companion object {
-        val log: Logger = Logger.getLogger(SentientController::class.simpleName)
-
-        private var inst: SentientController? = null
-
-        fun getInstance(): SentientController {
-            if (inst == null) {
-                inst = SentientController()
-            }
-
-            return inst as SentientController
-        }
-    }
+    private val log: Logger = Logger.getLogger(SentientController::class.simpleName)
 
     /**
      * Parses a byte array into a string
