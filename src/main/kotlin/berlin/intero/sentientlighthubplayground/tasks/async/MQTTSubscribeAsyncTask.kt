@@ -2,7 +2,6 @@ package berlin.intero.sentientlighthubplayground.tasks.async
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.controller.MqttController
-import berlin.intero.sentientlighthubplayground.controller.SentientController
 import org.eclipse.paho.client.mqttv3.MqttCallback
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
@@ -14,13 +13,7 @@ class MQTTSubscribeAsyncTask : Runnable {
 
     companion object {
         val log: Logger = Logger.getLogger(MQTTSubscribeAsyncTask::class.simpleName)
-        val sentientController = SentientController.getInstance()
         val mqttController = MqttController.getInstance()
-    }
-
-    init {
-        sentientController.loadSensorsConfig()
-        sentientController.loadMappingConfig()
     }
 
     override fun run() {

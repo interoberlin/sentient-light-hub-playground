@@ -1,6 +1,7 @@
 package berlin.intero.sentientlighthubplayground.tasks.scheduled
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
+import berlin.intero.sentientlighthubplayground.controller.ConfigurationController
 import berlin.intero.sentientlighthubplayground.controller.MqttController
 import berlin.intero.sentientlighthubplayground.controller.SentientController
 import berlin.intero.sentientlighthubplayground.tasks.async.MQTTSubscribeAsyncTask
@@ -18,14 +19,15 @@ class SentientMappingScheduledTask {
 
     companion object {
         val log: Logger = Logger.getLogger(SentientMappingScheduledTask::class.simpleName)
+        val configurationController = ConfigurationController.getInstance()
         val sentientController = SentientController.getInstance()
     }
 
     init {
-        sentientController.loadSensorsConfig()
-        sentientController.loadMappingConfig()
+        configurationController.loadSensorsConfig()
+        configurationController.loadMappingConfig()
 
-        val m = sentientController.mappingConfig
+        val m = configurationController.mappingConfig
         log.info("m $m")
 
         if (m != null) {
@@ -59,13 +61,13 @@ class SentientMappingScheduledTask {
 
         recentValues.forEach { topic, value ->
             log.info("Recent value $topic > $value")
-            log.info("Condition fulfilled ${sentientController.mappingConfig?.condition?.isFulfilled(topic, value.toIntOrNull())}")
+            log.info("Condition fulfilled ${configurationController.mappingConfig?.condition?.isFulfilled(topic, value.toIntOrNull())}")
 
             val checkerboardID = topic.split('/').last()
 
-            if (sentientController.mappingConfig?.condition?.isFulfilled(checkerboardID, value.toIntOrNull())
+            if (configurationController.mappingConfig?.condition?.isFulfilled(checkerboardID, value.toIntOrNull())
                             ?: false) {
-                val action = sentientController.mappingConfig?.action
+                val action = configurationController.mappingConfig?.action
 
                 action?.value = value
                 action?.apply()

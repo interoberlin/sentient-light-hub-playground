@@ -1,6 +1,7 @@
 package berlin.intero.sentientlighthubplayground.tasks.scheduled
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
+import berlin.intero.sentientlighthubplayground.controller.ConfigurationController
 import berlin.intero.sentientlighthubplayground.controller.SentientController
 import berlin.intero.sentientlighthubplayground.controller.TinybController
 import berlin.intero.sentientlighthubplayground.exceptions.BluetoothConnectionException
@@ -15,12 +16,13 @@ import java.util.logging.Logger
 class GATTReadSensorScheduledTask {
     companion object {
         val log: Logger = Logger.getLogger(GATTReadSensorScheduledTask::class.simpleName)
+        val configurationController = ConfigurationController.getInstance()
         val sentientController = SentientController.getInstance()
         val tinybController = TinybController.getInstance()
     }
 
     init {
-        sentientController.loadSensorsConfig()
+        configurationController.loadSensorsConfig()
     }
 
     @Scheduled(fixedDelay = SentientProperties.SENSOR_READ_DELAY)
@@ -28,7 +30,7 @@ class GATTReadSensorScheduledTask {
         log.info("-- GATT READ SENSOR TASK")
 
         val scannedDevices = tinybController.scannedDevices
-        val intendedDevices = sentientController.sensorConfig?.devices
+        val intendedDevices = configurationController.sensorConfig?.devices
 
         // Iterate over intended devices
         intendedDevices?.forEach { intendedDevice ->
