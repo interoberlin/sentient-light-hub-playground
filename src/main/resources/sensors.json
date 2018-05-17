@@ -2,10 +2,20 @@
   "devices": [
     {
       "address": "C2:CE:B6:BC:D7:5B",
+      "description": "Flos sensor",
       "sensors": [
         {
           "index": 0,
-          "checkerboardID": "A1"
+          "checkerboardID": "X1"
+        }
+      ]
+    }, {
+      "address": "F6:56:9D:78:F0:2E",
+      "description": "Götz' sensor",
+      "sensors": [
+        {
+          "index": 0,
+          "checkerboardID": "Y1"
         }
       ]
     }
