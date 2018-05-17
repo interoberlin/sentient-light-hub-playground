@@ -2,9 +2,11 @@ package berlin.intero.sentientlighthubplayground.controller
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.exceptions.BluetoothConnectionException
+import org.springframework.stereotype.Controller
 import tinyb.*
 import java.util.logging.Logger
 
+@Controller
 class TinybController
 private constructor() : BluetoothNotification<ByteArray> {
     companion object {

@@ -5,12 +5,14 @@ import berlin.intero.sentientlighthubplayground.model.sensor.SensorConfig
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
 import org.apache.commons.io.IOUtils
+import org.springframework.stereotype.Controller
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.charset.Charset
 import java.util.logging.Logger
 
+@Controller
 class SentientController {
 
     var sensorConfig: SensorConfig? = null

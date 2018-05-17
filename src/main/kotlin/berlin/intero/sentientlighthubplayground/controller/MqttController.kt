@@ -4,8 +4,10 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallback
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttMessage
+import org.springframework.stereotype.Controller
 import java.util.logging.Logger
 
+@Controller
 class MqttController {
     companion object {
         val log = Logger.getLogger(MqttController::class.simpleName)
@@ -38,9 +40,11 @@ class MqttController {
         // Build message
         val message = MqttMessage(messageString.toByteArray())
 
-        // Publish mesage
+        // Publish message
         log.info("Publish ${topic} : ${messageString}")
         client.publish(topic, message)
+
+
 
         // Disconnect from MQTT broker
         log.info("Client disconnect")

@@ -16,3 +16,5 @@ fun main(args: Array<String>) {
 
     log.info("Sentient Light Hub Playground")
 }
+
+data class Foo(val x: String, val y: String)
