@@ -1,5 +1,6 @@
 package berlin.intero.sentientlighthubplayground.controller
 
+import berlin.intero.sentientlighthubplayground.model.actor.ActorConfig
 import berlin.intero.sentientlighthubplayground.model.mapping.MappingConfig
 import berlin.intero.sentientlighthubplayground.model.sensor.SensorConfig
 import com.google.gson.GsonBuilder
@@ -16,16 +17,29 @@ object ConfigurationController {
     private val log: Logger = Logger.getLogger(ConfigurationController::class.simpleName)
 
     var sensorConfig: SensorConfig? = null
+    var actorConfig: ActorConfig? = null
     var mappingConfig: MappingConfig? = null
 
     init {
         loadSensorsConfig()
+        loadActorsConfig()
         loadMappingConfig()
     }
 
     fun loadSensorsConfig() = try {
         val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream("sensors.json"), Charset.defaultCharset())
         this.sensorConfig = GsonBuilder().create().fromJson(result, SensorConfig::class.java) as SensorConfig
+    } catch (ex: Exception) {
+        when (ex) {
+            is IOException -> log.severe("$ex")
+            is JsonSyntaxException -> log.severe("$ex")
+            else -> throw ex
+        }
+    }
+
+    fun loadActorsConfig() = try {
+        val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream("actors.json"), Charset.defaultCharset())
+        this.actorConfig = GsonBuilder().create().fromJson(result, ActorConfig::class.java) as ActorConfig
     } catch (ex: Exception) {
         when (ex) {
             is IOException -> log.severe("$ex")

@@ -1,5 +1,5 @@
 {
-  "devices": [
+  "sensorDevices": [
     {
       "address": "C2:CE:B6:BC:D7:5B",
       "description": "Flos sensor",
@@ -9,7 +9,8 @@
           "checkerboardID": "X1"
         }
       ]
-    }, {
+    },
+    {
       "address": "F6:56:9D:78:F0:2E",
       "description": "Götz' sensor",
       "sensors": [

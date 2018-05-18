@@ -19,10 +19,6 @@ class GATTReadSensorScheduledTask {
         private val log: Logger = Logger.getLogger(GATTReadSensorScheduledTask::class.simpleName)
     }
 
-    init {
-        ConfigurationController.loadSensorsConfig()
-    }
-
     @Scheduled(fixedDelay = SentientProperties.SENSOR_READ_DELAY)
     fun readSensor() {
         log.info("-- GATT READ SENSOR TASK")

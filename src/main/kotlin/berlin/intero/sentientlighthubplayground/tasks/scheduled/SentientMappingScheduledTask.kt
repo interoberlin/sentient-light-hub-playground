@@ -20,9 +20,6 @@ class SentientMappingScheduledTask {
     }
 
     init {
-        ConfigurationController.loadSensorsConfig()
-        ConfigurationController.loadMappingConfig()
-
         val m = ConfigurationController.mappingConfig
         log.info("m $m")
 

@@ -2,7 +2,11 @@ package berlin.intero.sentientlighthubplayground.model.mapping
 
 import java.util.logging.Logger
 
-data class Condition(val checkerboardID: String, val threshold: Int) : Fulfillable {
+data class Condition(
+        val checkerboardID: String,
+        val threshold: Int
+) : Fulfillable {
+
     companion object {
         val log = Logger.getLogger(Condition::class.simpleName)
     }
