@@ -12,6 +12,11 @@ import org.springframework.stereotype.Component
 import tinyb.BluetoothException
 import java.util.logging.Logger
 
+/**
+ * This scheduled task
+ * <li> read GATT characteristics
+ * <li> calls {@link MQTTPublishAsyncTask} to publish the characteristics' values to a MQTT broker
+ */
 @Component
 class GATTReadSensorScheduledTask {
 
@@ -20,6 +25,7 @@ class GATTReadSensorScheduledTask {
     }
 
     @Scheduled(fixedDelay = SentientProperties.SENSOR_READ_DELAY)
+    @SuppressWarnings("unused")
     fun readSensor() {
         log.info("-- GATT READ SENSOR TASK")
 
@@ -42,11 +48,11 @@ class GATTReadSensorScheduledTask {
 
                 // Publish values
                 intendedDevice.sensors.forEach { s ->
+                    val topic = "${SentientProperties.TOPIC_SENSOR}/${s.checkerboardID}"
+                    val value = parsedValues.getOrElse(s.index) { -1 }.toString()
+
                     // Call MQTTPublishAsyncTask
-                    val mqttPublishAsyncTask = MQTTPublishAsyncTask()
-                    mqttPublishAsyncTask.topic = "${SentientProperties.TOPIC_SENSOR}/${s.checkerboardID}"
-                    mqttPublishAsyncTask.value = parsedValues.getOrElse(s.index) { -1 }.toString()
-                    SimpleAsyncTaskExecutor().execute(mqttPublishAsyncTask)
+                    SimpleAsyncTaskExecutor().execute(MQTTPublishAsyncTask(topic, value))
                 }
             } catch (ex: Exception) {
                 when (ex) {

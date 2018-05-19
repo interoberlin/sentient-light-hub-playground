@@ -6,11 +6,17 @@ import org.eclipse.paho.client.mqttv3.MqttCallback
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
 
+/**
+ * This async task starts subscription of a MQTT topic. Results are passed via a callback.
+ *
+ * @param topic topic to subscribe
+ * @param callback callback for subscription events
+ */
 @Component
-class MQTTSubscribeAsyncTask : Runnable {
-
-    var callback: MqttCallback? = null
-    var topic: String? = null
+class MQTTSubscribeAsyncTask(
+        val topic: String,
+        val callback: MqttCallback
+) : Runnable {
 
     companion object {
         private val log: Logger = Logger.getLogger(MQTTSubscribeAsyncTask::class.simpleName)
@@ -18,17 +24,8 @@ class MQTTSubscribeAsyncTask : Runnable {
 
     override fun run() {
         log.info("-- MQTT SUBSCRIBE TASK")
-        log.info("topic $topic")
+        log.fine("topic $topic")
 
-        if (topic != null) {
-            if (callback != null) {
-                MqttController.subscribe(SentientProperties.MQTT_SERVER_URI,
-                        topic as String, callback)
-            } else {
-                MqttController.subscribe(SentientProperties.MQTT_SERVER_URI,
-                        topic as String)
-            }
-        }
+        MqttController.subscribe(SentientProperties.MQTT_SERVER_URI, topic, callback)
     }
 }
-

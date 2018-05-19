@@ -12,50 +12,45 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
 
+/**
+ * This scheduled task
+ * <li> calls {@link MQTTSubscribeAsyncTask} to subscribe mapping values from MQTT broker
+ * <li> calls {@link GATTWriteSensorAsyncTask} to write values to a GATT device
+ */
 @Component
 class GATTWriteLEDScheduledTask {
-    val recentValues: MutableMap<String, String> = HashMap()
+    val values: MutableMap<String, String> = HashMap()
 
     companion object {
         private val log: Logger = Logger.getLogger(GATTWriteLEDScheduledTask::class.simpleName)
     }
 
     init {
-        val m = ConfigurationController.mappingConfig
-        log.info("m $m")
-
-        if (m != null) {
-            val mqttSubscribeAsyncTask = MQTTSubscribeAsyncTask()
-
-            mqttSubscribeAsyncTask.topic = "${SentientProperties.TOPIC_LED}/#"
-            mqttSubscribeAsyncTask.callback = object : MqttCallback {
-                override fun messageArrived(topic: String?, message: MqttMessage?) {
-                    if (topic != null && message != null)
-                        recentValues.put(topic, String(message.payload))
-                }
-
-                override fun connectionLost(cause: Throwable?) {
-                    log.info("Connection lost")
-                }
-
-                override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                    log.info("Delivery complete")
-                }
+        val topic = "${SentientProperties.TOPIC_LED}/#"
+        val callback = object : MqttCallback {
+            override fun messageArrived(topic: String, message: MqttMessage) {
+                values[topic] = String(message.payload)
             }
 
-            // Run subscription task once
-            SimpleAsyncTaskExecutor().execute(mqttSubscribeAsyncTask)
+            override fun connectionLost(cause: Throwable?) {
+                log.info("Connection lost")
+            }
+
+            override fun deliveryComplete(token: IMqttDeliveryToken?) {
+                log.info("Delivery complete")
+            }
         }
+
+        // Call MQTTSubscribeAsyncTask
+        SimpleAsyncTaskExecutor().execute(MQTTSubscribeAsyncTask(topic, callback))
     }
 
     @Scheduled(fixedDelay = SentientProperties.SENTIENT_MAPPING_DELAY)
     fun map() {
-        log.info("-- SENTIENT MAPPING TASK")
+        log.info("-- GATT WRITE LED TASK")
 
-        recentValues.forEach { topic, value ->
+        values.forEach { topic, value ->
             log.info("Recent value $topic > $value")
-
-            log.info("Condition fulfilled ${ConfigurationController.mappingConfig?.condition?.isFulfilled(topic, value.toIntOrNull())}")
 
             val stripID = topic.split('/')[1]
             val ledID = topic.split('/')[2]
@@ -63,19 +58,19 @@ class GATTWriteLEDScheduledTask {
             val actor = ConfigurationController.getActor(stripID.toIntOrNull(), ledID.toIntOrNull())
 
             if (actor != null) {
-                // Call GATTWriteSensorAsyncTask
-                val gattWriteSensorAsyncTask = GATTWriteSensorAsyncTask()
-                gattWriteSensorAsyncTask.address = actor.address
-                gattWriteSensorAsyncTask.characteristicID = SentientProperties.CHARACTERISTIC_LED
+                val address = actor.address
+                val characteristicID = SentientProperties.CHARACTERISTIC_LED
+
+                var byteValue = byteArrayOf()
 
                 when (value) {
-                    "0" -> gattWriteSensorAsyncTask.value = byteArrayOf(0x00)
-                    "1" -> gattWriteSensorAsyncTask.value = byteArrayOf(0x01)
+                    "0" -> byteValue = byteArrayOf(0x00)
+                    "1" -> byteValue = byteArrayOf(0x01)
                 }
 
-                SimpleAsyncTaskExecutor().execute(gattWriteSensorAsyncTask)
+                // Call GATTWriteSensorAsyncTask
+                SimpleAsyncTaskExecutor().execute(GATTWriteSensorAsyncTask(address, characteristicID, byteValue))
             }
         }
     }
 }
-

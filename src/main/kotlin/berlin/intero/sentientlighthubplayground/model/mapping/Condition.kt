@@ -11,7 +11,7 @@ data class Condition(
         val log = Logger.getLogger(Condition::class.simpleName)
     }
 
-    override fun isFulfilled(checkerboardID: String, value: Int?): Boolean {
+    override fun isFulfilled(checkerboardID: String?, value: Int?): Boolean {
         log.info("checkerboardID ${checkerboardID}")
         log.info("this.checkerboardID ${this.checkerboardID}")
         log.info("value ${value}")
