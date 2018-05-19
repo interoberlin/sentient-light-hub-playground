@@ -2,7 +2,7 @@ package berlin.intero.sentientlighthubplayground.tasks.scheduled
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.controller.ConfigurationController
-import berlin.intero.sentientlighthubplayground.tasks.async.MQTTPublishAsyncTask
+import berlin.intero.sentientlighthubplayground.tasks.async.GATTWriteSensorAsyncTask
 import berlin.intero.sentientlighthubplayground.tasks.async.MQTTSubscribeAsyncTask
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallback
@@ -13,21 +13,21 @@ import org.springframework.stereotype.Component
 import java.util.logging.Logger
 
 @Component
-class SentientMappingScheduledTask {
+class GATTWriteLEDScheduledTask {
     val recentValues: MutableMap<String, String> = HashMap()
 
     companion object {
-        private val log: Logger = Logger.getLogger(SentientMappingScheduledTask::class.simpleName)
+        private val log: Logger = Logger.getLogger(GATTWriteLEDScheduledTask::class.simpleName)
     }
 
     init {
-        val mapping = ConfigurationController.mappingConfig
-        log.info("m $mapping")
+        val m = ConfigurationController.mappingConfig
+        log.info("m $m")
 
-        if (mapping != null) {
+        if (m != null) {
             val mqttSubscribeAsyncTask = MQTTSubscribeAsyncTask()
 
-            mqttSubscribeAsyncTask.topic = "${SentientProperties.TOPIC_SENSOR}/${mapping.condition.checkerboardID}"
+            mqttSubscribeAsyncTask.topic = "${SentientProperties.TOPIC_LED}/#"
             mqttSubscribeAsyncTask.callback = object : MqttCallback {
                 override fun messageArrived(topic: String?, message: MqttMessage?) {
                     if (topic != null && message != null)
@@ -54,21 +54,26 @@ class SentientMappingScheduledTask {
 
         recentValues.forEach { topic, value ->
             log.info("Recent value $topic > $value")
+
             log.info("Condition fulfilled ${ConfigurationController.mappingConfig?.condition?.isFulfilled(topic, value.toIntOrNull())}")
 
-            val checkerboardID = topic.split('/').last()
+            val stripID = topic.split('/')[1]
+            val ledID = topic.split('/')[2]
 
-            if (ConfigurationController.mappingConfig?.condition?.isFulfilled(checkerboardID, value.toIntOrNull()) == true) {
-                val action = ConfigurationController.mappingConfig?.action
+            val actor = ConfigurationController.getActor(stripID.toIntOrNull(), ledID.toIntOrNull())
 
-                action?.apply {
-                    // Call MQTTPublishAsyncTask
-                    val mqttPublishAsyncTask = MQTTPublishAsyncTask()
-                    mqttPublishAsyncTask.topic = "${SentientProperties.TOPIC_LED}/${action.stripID}/${action.ledID}"
-                    mqttPublishAsyncTask.value = value
+            if (actor != null) {
+                // Call GATTWriteSensorAsyncTask
+                val gattWriteSensorAsyncTask = GATTWriteSensorAsyncTask()
+                gattWriteSensorAsyncTask.address = actor.address
+                gattWriteSensorAsyncTask.characteristicID = SentientProperties.CHARACTERISTIC_LED
 
-                    SimpleAsyncTaskExecutor().execute(mqttPublishAsyncTask)
+                when (value) {
+                    "0" -> gattWriteSensorAsyncTask.value = byteArrayOf(0x00)
+                    "1" -> gattWriteSensorAsyncTask.value = byteArrayOf(0x01)
                 }
+
+                SimpleAsyncTaskExecutor().execute(gattWriteSensorAsyncTask)
             }
         }
     }

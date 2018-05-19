@@ -12,6 +12,7 @@ class SentientProperties {
 
         const val TOPIC_BASE = "/sentientlight"
         const val TOPIC_SENSOR = "$TOPIC_BASE/floorsensor"
+        const val TOPIC_LED = "$TOPIC_BASE/led"
 
         const val GATT_CONNECTION_RETRY = 10
         const val GATT_CONNECTION_IDLE = 5000L

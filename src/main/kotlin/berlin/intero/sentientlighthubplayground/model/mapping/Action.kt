@@ -12,6 +12,7 @@ data class Action(
         val log = Logger.getLogger(Action::class.simpleName)
     }
 
-    override fun apply() {
+    override fun apply(action: () -> Unit) {
+        action.invoke()
     }
 }
