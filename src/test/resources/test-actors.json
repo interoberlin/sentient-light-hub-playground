@@ -1,0 +1,19 @@
+{
+  "actorDevices": [
+    {
+      "address": "FF:FF:FF:FF:FF:FF",
+      "description": "Test actor",
+      "strips": [
+        {
+          "index": 5,
+          "direction": "SOUTH",
+          "leds": [
+            {
+              "index": 5
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
