@@ -1,6 +1,7 @@
 package berlin.intero.sentientlighthubplayground.controller
 
 import berlin.intero.sentientlighthubplayground.model.actor.ActorConfig
+import berlin.intero.sentientlighthubplayground.model.actor.ActorDevice
 import berlin.intero.sentientlighthubplayground.model.mapping.MappingConfig
 import berlin.intero.sentientlighthubplayground.model.sensor.SensorConfig
 import com.google.gson.GsonBuilder
@@ -16,18 +17,22 @@ object ConfigurationController {
 
     private val log: Logger = Logger.getLogger(ConfigurationController::class.simpleName)
 
+    private const val sensorConfigFileName = "sensors.json"
+    private const val actorConfigFileName = "actors.json"
+    private const val mappingConfigFileName = "mappings.json"
+
     var sensorConfig: SensorConfig? = null
     var actorConfig: ActorConfig? = null
     var mappingConfig: MappingConfig? = null
 
     init {
-        loadSensorsConfig()
-        loadActorsConfig()
-        loadMappingConfig()
+        loadSensorsConfig(sensorConfigFileName)
+        loadActorsConfig(actorConfigFileName)
+        loadMappingConfig(mappingConfigFileName)
     }
 
-    fun loadSensorsConfig() = try {
-        val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream("sensors.json"), Charset.defaultCharset())
+    fun loadSensorsConfig(configFileName: String) = try {
+        val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream(configFileName), Charset.defaultCharset())
         this.sensorConfig = GsonBuilder().create().fromJson(result, SensorConfig::class.java) as SensorConfig
     } catch (ex: Exception) {
         when (ex) {
@@ -37,8 +42,8 @@ object ConfigurationController {
         }
     }
 
-    fun loadActorsConfig() = try {
-        val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream("actors.json"), Charset.defaultCharset())
+    fun loadActorsConfig(configFileName: String) = try {
+        val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream(configFileName), Charset.defaultCharset())
         this.actorConfig = GsonBuilder().create().fromJson(result, ActorConfig::class.java) as ActorConfig
     } catch (ex: Exception) {
         when (ex) {
@@ -48,10 +53,19 @@ object ConfigurationController {
         }
     }
 
-    fun loadMappingConfig() = try {
-        val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream("mapping.json"), Charset.defaultCharset())
+    fun loadMappingConfig(configFileName: String) = try {
+        val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream(configFileName), Charset.defaultCharset())
         this.mappingConfig = GsonBuilder().create().fromJson(result, MappingConfig::class.java) as MappingConfig
     } catch (e: IOException) {
         log.severe("$e")
+    }
+
+    fun getActor(stripID: Int?, ledID: Int?): ActorDevice? {
+        return actorConfig?.actorDevices?.filter { d ->
+            d.strips.any { s ->
+                s.index == stripID && s.leds.any { l ->
+                    l.index == ledID }
+            }
+        }?.firstOrNull()
     }
 }
