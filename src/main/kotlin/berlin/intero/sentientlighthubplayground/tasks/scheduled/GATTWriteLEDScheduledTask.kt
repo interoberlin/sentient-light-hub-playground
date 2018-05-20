@@ -7,6 +7,7 @@ import berlin.intero.sentientlighthubplayground.tasks.async.MQTTSubscribeAsyncTa
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallback
 import org.eclipse.paho.client.mqttv3.MqttMessage
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.task.SimpleAsyncTaskExecutor
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -18,6 +19,7 @@ import java.util.logging.Logger
  * <li> calls {@link GATTWriteSensorAsyncTask} to write values to a GATT device
  */
 @Component
+@ConditionalOnProperty(value = "sentient.writeled.enabled", havingValue = "true", matchIfMissing = false)
 class GATTWriteLEDScheduledTask {
     val values: MutableMap<String, String> = HashMap()
 

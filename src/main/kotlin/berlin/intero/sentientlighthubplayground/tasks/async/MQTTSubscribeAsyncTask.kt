@@ -3,7 +3,6 @@ package berlin.intero.sentientlighthubplayground.tasks.async
 import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.controller.MqttController
 import org.eclipse.paho.client.mqttv3.MqttCallback
-import org.springframework.stereotype.Component
 import java.util.logging.Logger
 
 /**
@@ -12,7 +11,6 @@ import java.util.logging.Logger
  * @param topic topic to subscribe
  * @param callback callback for subscription events
  */
-@Component
 class MQTTSubscribeAsyncTask(
         val topic: String,
         val callback: MqttCallback

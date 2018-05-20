@@ -3,7 +3,6 @@ package berlin.intero.sentientlighthubplayground.tasks.async
 import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.model.mapping.Mapping
 import org.springframework.core.task.SimpleAsyncTaskExecutor
-import org.springframework.stereotype.Component
 import java.util.logging.Logger
 
 /**
@@ -13,7 +12,6 @@ import java.util.logging.Logger
  * @param mapping to be evaluated
  * @param values current values
  */
-@Component
 class SentientMappingEvaluationAsyncTask(
         val mapping: Mapping,
         val values: Map<String, String>

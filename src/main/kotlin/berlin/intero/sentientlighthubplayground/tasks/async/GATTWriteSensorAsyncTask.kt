@@ -2,7 +2,6 @@ package berlin.intero.sentientlighthubplayground.tasks.async
 
 import berlin.intero.sentientlighthubplayground.controller.TinybController
 import berlin.intero.sentientlighthubplayground.exceptions.BluetoothConnectionException
-import org.springframework.stereotype.Component
 import tinyb.BluetoothException
 import java.util.logging.Logger
 
@@ -13,7 +12,6 @@ import java.util.logging.Logger
  * @param characteristicID ID of the characteristic that the value should be written to
  * @param value value to write
  */
-@Component
 class GATTWriteSensorAsyncTask(
         val address: String,
         val characteristicID: String,

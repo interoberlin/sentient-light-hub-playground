@@ -3,7 +3,6 @@ package berlin.intero.sentientlighthubplayground.tasks.async
 import berlin.intero.sentientlighthubplayground.controller.SseController
 import berlin.intero.sentientlighthubplayground.model.SensorEvent
 import com.google.gson.Gson
-import org.springframework.stereotype.Component
 import java.util.*
 import java.util.logging.Logger
 
@@ -13,7 +12,6 @@ import java.util.logging.Logger
  * @param topic topic
  * @param value value
  */
-@Component
 class SSESendAsyncTask(
         val topic: String,
         val value: String

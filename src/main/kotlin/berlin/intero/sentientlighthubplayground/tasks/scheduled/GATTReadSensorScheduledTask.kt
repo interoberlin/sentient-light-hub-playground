@@ -6,6 +6,7 @@ import berlin.intero.sentientlighthubplayground.controller.SentientController
 import berlin.intero.sentientlighthubplayground.controller.TinybController
 import berlin.intero.sentientlighthubplayground.exceptions.BluetoothConnectionException
 import berlin.intero.sentientlighthubplayground.tasks.async.MQTTPublishAsyncTask
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.task.SimpleAsyncTaskExecutor
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -18,7 +19,7 @@ import java.util.logging.Logger
  * <li> calls {@link MQTTPublishAsyncTask} to publish the characteristics' values to a MQTT broker
  */
 @Component
-class GATTReadSensorScheduledTask {
+@ConditionalOnProperty(value = "sentient.readsensor.enabled", havingValue = "true", matchIfMissing = false)class GATTReadSensorScheduledTask {
 
     companion object {
         private val log: Logger = Logger.getLogger(GATTReadSensorScheduledTask::class.simpleName)

@@ -1,10 +1,8 @@
 package berlin.intero.sentientlighthubplayground
 
-import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.stereotype.Component
+import org.springframework.context.annotation.Configuration
 
-@Component
-@ConfigurationProperties("sentient")
+@Configuration
 class SentientProperties {
     companion object {
         const val CHARACTERISTIC_SENSOR = "00002014-0000-1000-8000-00805f9b34fb"

@@ -7,6 +7,7 @@ import berlin.intero.sentientlighthubplayground.tasks.async.SentientMappingEvalu
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallback
 import org.eclipse.paho.client.mqttv3.MqttMessage
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.task.SimpleAsyncTaskExecutor
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -18,7 +19,9 @@ import java.util.logging.Logger
  * <li> calls {@link SentientMappingEvaluationAsyncTask} for each mapping from configuration
  */
 @Component
+@ConditionalOnProperty(value = "sentient.mapping.enabled", havingValue = "true", matchIfMissing = false)
 class SentientMappingScheduledTask {
+
     val values: MutableMap<String, String> = HashMap()
 
     companion object {

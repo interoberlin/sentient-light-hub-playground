@@ -3,7 +3,6 @@ package berlin.intero.sentientlighthubplayground.tasks.async
 import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.controller.MqttController
 import berlin.intero.sentientlighthubplayground.model.SensorEvent
-import org.springframework.stereotype.Component
 import java.util.*
 import java.util.logging.Logger
 
@@ -13,7 +12,6 @@ import java.util.logging.Logger
  * @param topic topic to be published to
  * @param value value to publish
  */
-@Component
 class MQTTPublishAsyncTask(
         val topic: String,
         val value: String

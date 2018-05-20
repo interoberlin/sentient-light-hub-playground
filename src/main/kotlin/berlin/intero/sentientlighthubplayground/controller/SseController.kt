@@ -10,7 +10,6 @@ import java.io.IOException
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.servlet.http.HttpServletResponse
 
-
 @Controller
 @CrossOrigin
 object SseController {
