@@ -3,6 +3,7 @@ package berlin.intero.sentientlighthubplayground.controller
 import berlin.intero.sentientlighthubplayground.model.actor.ActorConfig
 import berlin.intero.sentientlighthubplayground.model.actor.ActorDevice
 import berlin.intero.sentientlighthubplayground.model.mapping.MappingConfig
+import berlin.intero.sentientlighthubplayground.model.mapping.conditions.Fulfillable
 import berlin.intero.sentientlighthubplayground.model.sensor.SensorConfig
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
@@ -55,7 +56,12 @@ object ConfigurationController {
 
     fun loadMappingConfig(configFileName: String) = try {
         val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream(configFileName), Charset.defaultCharset())
-        this.mappingConfig = GsonBuilder().create().fromJson(result, MappingConfig::class.java) as MappingConfig
+
+        val gsonBuilder = GsonBuilder()
+
+        val gson = GsonBuilder()
+        gson.registerTypeAdapter(Fulfillable::class.java, FulfillableDeserializer())
+        this.mappingConfig = gson.create().fromJson(result, MappingConfig::class.java) as MappingConfig
     } catch (e: IOException) {
         log.severe("$e")
     }

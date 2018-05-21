@@ -2,6 +2,8 @@ package berlin.intero.sentientlighthubplayground.tasks.async
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.model.mapping.Mapping
+import berlin.intero.sentientlighthubplayground.model.mapping.conditions.AbsoluteThresholdCondition
+import berlin.intero.sentientlighthubplayground.model.mapping.conditions.DynamicThresholdCondition
 import org.springframework.core.task.SimpleAsyncTaskExecutor
 import java.util.logging.Logger
 
@@ -10,11 +12,12 @@ import java.util.logging.Logger
  * if the mapping's condition is fulfilled
  *
  * @param mapping to be evaluated
- * @param values current values
+ * @param valuesCurrent current valuesCurrent
  */
 class SentientMappingEvaluationAsyncTask(
         val mapping: Mapping,
-        val values: Map<String, String>
+        val valuesCurrent: Map<String, String>,
+        val valuesAverage: Map<String, String>
 ) : Runnable {
 
     companion object {
@@ -26,17 +29,32 @@ class SentientMappingEvaluationAsyncTask(
 
         val condition = mapping.condition
         val action = mapping.action
+        var fulfilled = false
 
-        val checkerboardID = condition.checkerboardID
-        val value = values[checkerboardID]
+        when (condition) {
 
-        if (condition.isFulfilled(checkerboardID, value?.toIntOrNull())) {
+            is AbsoluteThresholdCondition -> {
+                val checkerboardID = condition.checkerboardID
+                val value = valuesCurrent[checkerboardID]
 
+                fulfilled = condition.isFulfilled(checkerboardID, value?.toIntOrNull())
+            }
+
+            is DynamicThresholdCondition -> {
+                val checkerboardID = condition.checkerboardID
+                val averageValue = valuesAverage[checkerboardID]
+                val value = valuesCurrent[checkerboardID]
+
+                fulfilled = condition.isFulfilled(checkerboardID, averageValue?.toIntOrNull(), value?.toIntOrNull())
+            }
+        }
+
+        if (fulfilled) {
             action.apply {
                 val topic = "${SentientProperties.TOPIC_LED}/${action.stripID}/${action.ledID}"
 
                 // Call MQTTPublishAsyncTask
-                SimpleAsyncTaskExecutor().execute(MQTTPublishAsyncTask(topic, value.orEmpty()))
+                SimpleAsyncTaskExecutor().execute(MQTTPublishAsyncTask(topic, action.value))
             }
         }
     }

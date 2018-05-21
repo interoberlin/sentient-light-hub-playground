@@ -1,0 +1,17 @@
+{
+  "mappings": [
+    {
+      "condition": {
+        "conditionType": "DYNAMIC_THRESHOLD",
+        "thresholdType": "ABOVE_AVERAGE",
+        "checkerboardID": "X1",
+        "threshold": -1
+      },
+      "action": {
+        "stripID": "N1",
+        "ledID": "1",
+        "value": "1"
+      }
+    }
+  ]
+}

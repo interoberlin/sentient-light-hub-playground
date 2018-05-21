@@ -1,4 +1,4 @@
-package berlin.intero.sentientlighthubplayground.model.mapping
+package berlin.intero.sentientlighthubplayground.model.mapping.actions
 
 data class Action(
         val stripID: String,
