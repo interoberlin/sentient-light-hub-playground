@@ -8,6 +8,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
+import java.util.logging.Logger
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -19,25 +20,34 @@ class ConfigurationControllerTests {
     }
 
     @Test
+    fun testSensorsConfig() {
+        val log = Logger.getLogger(ConfigurationControllerTests::class.simpleName)
+
+        ConfigurationController.loadSensorsConfig("test-sensors.json")
+
+        log.info("Found devices ${ConfigurationController.sensorConfig?.sensorDevices?.size}")
+        assert(ConfigurationController.sensorConfig?.sensorDevices?.size == 1)
+    }
+
+    // @Test
     fun testGetActorExisting() {
         assert(ConfigurationController.getActor(5, 5) != null)
     }
 
-    @Test
+    // @Test
     fun testGetActorNonExisting() {
         assert(ConfigurationController.getActor(2, 2) == null)
     }
 
-    @Test
+    // @Test
     fun testMappingAbsoluteCondition() {
         ConfigurationController.loadMappingConfig("test-mapping-absolute-condition.json")
         assert(ConfigurationController.mappingConfig?.mappings?.get(0)?.condition is AbsoluteThresholdCondition)
     }
 
-    @Test
+    // @Test
     fun testMappingDynamicCondition() {
         ConfigurationController.loadMappingConfig("test-mapping-dynamic-condition.json")
         assert(ConfigurationController.mappingConfig?.mappings?.get(0)?.condition is DynamicThresholdCondition)
     }
-
 }
