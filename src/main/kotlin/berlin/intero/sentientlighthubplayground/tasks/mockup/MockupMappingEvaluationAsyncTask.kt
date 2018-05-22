@@ -1,10 +1,9 @@
-package berlin.intero.sentientlighthubplayground.tasks.async
+package berlin.intero.sentientlighthubplayground.tasks.mockup
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.model.mapping.Mapping
 import berlin.intero.sentientlighthubplayground.model.mapping.conditions.AbsoluteThresholdCondition
 import berlin.intero.sentientlighthubplayground.model.mapping.conditions.DynamicThresholdCondition
-import org.springframework.core.task.SimpleAsyncTaskExecutor
 import java.util.logging.Logger
 
 /**
@@ -15,18 +14,18 @@ import java.util.logging.Logger
  * @param valuesCurrent current values
  * @param valuesAverage average values
  */
-class SentientMappingEvaluationAsyncTask(
+class MockupMappingEvaluationAsyncTask(
         val mapping: Mapping,
         val valuesCurrent: Map<String, String>,
         val valuesAverage: Map<String, String>
 ) : Runnable {
 
     companion object {
-        private val log: Logger = Logger.getLogger(SentientMappingEvaluationAsyncTask::class.simpleName)
+        private val log: Logger = Logger.getLogger(MockupMappingEvaluationAsyncTask::class.simpleName)
     }
 
     override fun run() {
-        log.info("-- SENTIENT MAPPING EVALUATION TASK")
+        log.info("-- MOCKUP MAPPING EVALUATION TASK")
 
         val condition = mapping.condition
         val action = mapping.action
@@ -47,6 +46,8 @@ class SentientMappingEvaluationAsyncTask(
                 val value = valuesCurrent[checkerboardID]
 
                 fulfilled = condition.isFulfilled(checkerboardID, averageValue?.toIntOrNull(), value?.toIntOrNull())
+
+                log.info("avg:$averageValue / val:$value ($fulfilled)")
             }
         }
 
@@ -54,8 +55,10 @@ class SentientMappingEvaluationAsyncTask(
             action.apply {
                 val topic = "${SentientProperties.TOPIC_LED}/${action.stripID}/${action.ledID}"
 
+                log.warning("TRIGGERED")
+
                 // Call MQTTPublishAsyncTask
-                SimpleAsyncTaskExecutor().execute(MQTTPublishAsyncTask(topic, action.value))
+                // SimpleAsyncTaskExecutor().execute(MQTTPublishAsyncTask(topic, action.value))
             }
         }
     }

@@ -56,6 +56,7 @@ dependencies {
     compile('commons-io:commons-io:2.5')
     compile('log4j:log4j:1.2.17')
     compile('com.google.code.gson:gson:2.7')
+    compile('com.google.guava:guava:25.0-jre')
 
     compile('org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0')
 

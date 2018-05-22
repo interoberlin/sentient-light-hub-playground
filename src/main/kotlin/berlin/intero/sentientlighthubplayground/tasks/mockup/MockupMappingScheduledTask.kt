@@ -1,9 +1,11 @@
-package berlin.intero.sentientlighthubplayground.tasks.scheduled
+package berlin.intero.sentientlighthubplayground.tasks.mockup
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
-import berlin.intero.sentientlighthubplayground.controller.ConfigurationController
+import berlin.intero.sentientlighthubplayground.model.mapping.Mapping
+import berlin.intero.sentientlighthubplayground.model.mapping.actions.Action
+import berlin.intero.sentientlighthubplayground.model.mapping.conditions.DynamicThresholdCondition
+import berlin.intero.sentientlighthubplayground.model.mapping.conditions.EThresholdType
 import berlin.intero.sentientlighthubplayground.tasks.async.MQTTSubscribeAsyncTask
-import berlin.intero.sentientlighthubplayground.tasks.async.SentientMappingEvaluationAsyncTask
 import com.google.common.collect.EvictingQueue
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallback
@@ -21,15 +23,15 @@ import java.util.logging.Logger
  * <li> calls {@link SentientMappingEvaluationAsyncTask} for each mapping from configuration
  */
 @Component
-@ConditionalOnProperty(value = "sentient.mapping.enabled", havingValue = "true", matchIfMissing = false)
-class SentientMappingScheduledTask {
+@ConditionalOnProperty(value = "mockup.mapping.enabled", havingValue = "true", matchIfMissing = false)
+class MockupMappingScheduledTask {
 
     val valuesCurrent: MutableMap<String, String> = HashMap()
     val valuesHistoric: MutableMap<String, Queue<String>?> = HashMap()
     val valuesAverage: MutableMap<String, String> = HashMap()
 
     companion object {
-        private val log: Logger = Logger.getLogger(SentientMappingScheduledTask::class.simpleName)
+        private val log: Logger = Logger.getLogger(MockupMappingScheduledTask::class.simpleName)
     }
 
     init {
@@ -84,15 +86,14 @@ class SentientMappingScheduledTask {
     @Scheduled(fixedDelay = SentientProperties.SENTIENT_MAPPING_DELAY)
     @SuppressWarnings("unused")
     fun map() {
-        log.info("-- SENTIENT MAPPING TASK")
+        log.info("-- MOCKUP MAPPING TASK")
 
-        ConfigurationController.mappingConfig?.mappings?.forEach { mapping ->
 
-            // Call SentientMappingEvaluationAsyncTask
-            SimpleAsyncTaskExecutor().execute(SentientMappingEvaluationAsyncTask(
-                    mapping = mapping,
-                    valuesCurrent = valuesCurrent,
-                    valuesAverage = valuesAverage))
-        }
+        val condition = DynamicThresholdCondition("D1", EThresholdType.ABOVE_AVERAGE, 10)
+        val action = Action("", "", "")
+        val mapping = Mapping(condition, action)
+
+        // Call SentientMappingEvaluationAsyncTask
+        SimpleAsyncTaskExecutor().execute(MockupMappingEvaluationAsyncTask(mapping, valuesCurrent, valuesAverage))
     }
 }
