@@ -1,0 +1,25 @@
+{
+  "sensorDevices": [
+    {
+      "address": "C2:CE:B6:BC:D7:5B",
+      "description": "Maker Faire 2018 Floor Sensor",
+      "sensors": [
+        { "index": 1, "checkerboardID": "X1" },
+        { "index": 2, "checkerboardID": "X2" },
+        { "index": 3, "checkerboardID": "X3" },
+        { "index": 4, "checkerboardID": "X4" },
+        { "index": 5, "checkerboardID": "X5" },
+        { "index": 6, "checkerboardID": "X6" },
+        { "index": 7, "checkerboardID": "X7" },
+        { "index": 8, "checkerboardID": "X8" },
+        { "index": 9, "checkerboardID": "X9" },
+        { "index": 10, "checkerboardID": "X10" },
+        { "index": 11, "checkerboardID": "X11" },
+        { "index": 12, "checkerboardID": "X12" },
+        { "index": 13, "checkerboardID": "X13" },
+        { "index": 14, "checkerboardID": "X14" },
+        { "index": 15, "checkerboardID": "X15" }
+      ]
+    }
+  ]
+}
