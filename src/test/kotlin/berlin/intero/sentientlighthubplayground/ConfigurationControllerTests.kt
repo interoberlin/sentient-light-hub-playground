@@ -8,7 +8,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
-import java.util.logging.Logger
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -16,13 +15,13 @@ class ConfigurationControllerTests {
 
     @Before
     fun setup() {
-        ConfigurationController.loadActorsConfig("test-actors.json")
+        ConfigurationController.loadActorsConfigFile("test-actors.json")
     }
 
     @Test
     fun testSensorsConfig() {
-        ConfigurationController.loadSensorsConfig("test-sensors.json")
-        assert(ConfigurationController.sensorConfig?.sensorDevices?.size == 1)
+        ConfigurationController.loadSensorsConfigFile("test-sensors.json")
+        assert(ConfigurationController.sensorsConfig?.sensorDevices?.size == 1)
     }
 
     // @Test
@@ -37,13 +36,13 @@ class ConfigurationControllerTests {
 
     // @Test
     fun testMappingAbsoluteCondition() {
-        ConfigurationController.loadMappingConfig("test-mapping-absolute-condition.json")
-        assert(ConfigurationController.mappingConfig?.mappings?.get(0)?.condition is AbsoluteThresholdCondition)
+        ConfigurationController.loadMappingsConfigFile("test-mapping-absolute-condition.json")
+        assert(ConfigurationController.mappingsConfig?.mappings?.get(0)?.condition is AbsoluteThresholdCondition)
     }
 
     // @Test
     fun testMappingDynamicCondition() {
-        ConfigurationController.loadMappingConfig("test-mapping-dynamic-condition.json")
-        assert(ConfigurationController.mappingConfig?.mappings?.get(0)?.condition is DynamicThresholdCondition)
+        ConfigurationController.loadMappingsConfigFile("test-mapping-dynamic-condition.json")
+        assert(ConfigurationController.mappingsConfig?.mappings?.get(0)?.condition is DynamicThresholdCondition)
     }
 }

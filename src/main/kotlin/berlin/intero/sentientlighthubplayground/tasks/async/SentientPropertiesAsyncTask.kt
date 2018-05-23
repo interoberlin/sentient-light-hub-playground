@@ -1,6 +1,7 @@
 package berlin.intero.sentientlighthubplayground.tasks.async
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
+import berlin.intero.sentientlighthubplayground.controller.ConfigurationController
 import berlin.intero.sentientlighthubplayground.model.mapping.Mapping
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallback
@@ -47,7 +48,6 @@ class SentientPropertiesAsyncTask() : Runnable {
     }
 
     fun handleValue(propertyName: String, value: String) {
-        log.info("${SentientProperties.ANSI_CYAN}Property change $propertyName : $value ${SentientProperties.ANSI_RESET}")
 
         when (propertyName) {
             "characteristic_sensor" -> SentientProperties.CHARACTERISTIC_SENSOR = value
@@ -66,7 +66,17 @@ class SentientPropertiesAsyncTask() : Runnable {
             "mqtt_server_port" -> SentientProperties.MQTT_SERVER_PORT = value
 
             "value_history" -> SentientProperties.VALUE_HISTORY = value.toInt()
+
+            "sensors_config" -> ConfigurationController.loadSensorsConfig(value)
+            "actors_config" -> ConfigurationController.loadActorsConfig(value)
+            "mappings_config" -> ConfigurationController.loadMappingsConfig(value)
+            else -> {
+                log.severe("Unknown property $propertyName")
+                return
+            }
         }
+
+        log.info("${SentientProperties.ANSI_CYAN}Property change $propertyName : $value ${SentientProperties.ANSI_RESET}")
     }
 
     override fun run() {

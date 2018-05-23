@@ -33,7 +33,7 @@ class GATTReadSensorScheduledTask {
         log.info("-- GATT READ SENSOR TASK")
 
         val scannedDevices = TinybController.scannedDevices
-        val intendedDevices = ConfigurationController.sensorConfig?.sensorDevices
+        val intendedDevices = ConfigurationController.sensorsConfig?.sensorDevices
 
         log.info("Show scannedDevices ${Gson().toJson(scannedDevices.map { d -> d.address })}")
         log.info("Show intendedDevices ${Gson().toJson(intendedDevices?.map { d -> d.address })}")
