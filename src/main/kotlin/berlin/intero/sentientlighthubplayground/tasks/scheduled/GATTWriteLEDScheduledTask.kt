@@ -53,9 +53,8 @@ class GATTWriteLEDScheduledTask {
 
         values.forEach { topic, value ->
 
-
-            val stripID = topic.split('/')[1]
-            val ledID = topic.split('/')[2]
+            val stripID = topic.split('/')[3]
+            val ledID = topic.split('/')[4]
 
             val actor = ConfigurationController.getActor(stripID, ledID)
 
