@@ -21,11 +21,7 @@ class ConfigurationControllerTests {
 
     @Test
     fun testSensorsConfig() {
-        val log = Logger.getLogger(ConfigurationControllerTests::class.simpleName)
-
         ConfigurationController.loadSensorsConfig("test-sensors.json")
-
-        log.info("Found devices ${ConfigurationController.sensorConfig?.sensorDevices?.size}")
         assert(ConfigurationController.sensorConfig?.sensorDevices?.size == 1)
     }
 
