@@ -11,7 +11,7 @@ import java.util.logging.Logger
  * This scheduled task scans for GATT devices and displays them
  */
 @Component
-@ConditionalOnProperty(value = "sentient.scandevices.enabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty("sentient.scandevices.enabled", havingValue = "true", matchIfMissing = false)
 class GATTScanDevicesScheduledTask {
 
     companion object {

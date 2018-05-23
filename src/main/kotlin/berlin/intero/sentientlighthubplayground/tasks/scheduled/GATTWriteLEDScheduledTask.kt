@@ -19,7 +19,7 @@ import java.util.logging.Logger
  * <li> calls {@link GATTWriteSensorAsyncTask} to write values to a GATT device
  */
 @Component
-@ConditionalOnProperty(value = "sentient.writeled.enabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty("sentient.writeled.enabled", havingValue = "true", matchIfMissing = false)
 class GATTWriteLEDScheduledTask {
     val values: MutableMap<String, String> = HashMap()
 

@@ -19,7 +19,7 @@ import java.util.logging.Logger
  * <li> calls {@link MQTTPublishAsyncTask} to publish the characteristics' values to a MQTT broker
  */
 @Component
-@ConditionalOnProperty(value = "sentient.readsensor.enabled", havingValue = "true", matchIfMissing = false)class GATTReadSensorScheduledTask {
+@ConditionalOnProperty("sentient.readsensor.enabled", havingValue = "true", matchIfMissing = false)class GATTReadSensorScheduledTask {
 
     companion object {
         private val log: Logger = Logger.getLogger(GATTReadSensorScheduledTask::class.simpleName)

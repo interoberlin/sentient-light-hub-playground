@@ -21,7 +21,7 @@ import java.util.logging.Logger
  * <li> calls {@link SentientMappingEvaluationAsyncTask} for each mapping from configuration
  */
 @Component
-@ConditionalOnProperty(value = "sentient.mapping.enabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty("sentient.mapping.enabled", havingValue = "true", matchIfMissing = false)
 class SentientMappingScheduledTask {
 
     val valuesCurrent: MutableMap<String, String> = HashMap()
