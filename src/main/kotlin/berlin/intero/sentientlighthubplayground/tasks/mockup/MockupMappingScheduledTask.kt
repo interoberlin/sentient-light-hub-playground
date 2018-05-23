@@ -23,7 +23,7 @@ import java.util.logging.Logger
  * <li> calls {@link SentientMappingEvaluationAsyncTask} for each mapping from configuration
  */
 @Component
-@ConditionalOnProperty(value = "mockup.mapping.enabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty("mockup.mapping.enabled", havingValue = "true", matchIfMissing = false)
 class MockupMappingScheduledTask {
 
     val valuesCurrent: MutableMap<String, String> = HashMap()
@@ -46,14 +46,10 @@ class MockupMappingScheduledTask {
 
             override fun connectionLost(cause: Throwable?) {
                 log.severe("Connection lost")
-                log.info("Restart connection")
-
-                val mqttSubscribeAsyncTask = MQTTSubscribeAsyncTask(topic, this)
-                SimpleAsyncTaskExecutor().execute(mqttSubscribeAsyncTask)
             }
 
             override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                log.severe("Delivery complete")
+                log.fine("Delivery complete")
             }
         }
 

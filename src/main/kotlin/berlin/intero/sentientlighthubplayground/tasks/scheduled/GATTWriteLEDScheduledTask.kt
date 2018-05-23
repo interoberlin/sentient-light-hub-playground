@@ -35,11 +35,11 @@ class GATTWriteLEDScheduledTask {
             }
 
             override fun connectionLost(cause: Throwable?) {
-                log.info("Connection lost")
+                log.severe("Connection lost")
             }
 
             override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                log.info("Delivery complete")
+                log.fine("Delivery complete")
             }
         }
 

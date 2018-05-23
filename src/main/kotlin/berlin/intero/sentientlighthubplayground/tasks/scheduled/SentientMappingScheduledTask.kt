@@ -44,14 +44,10 @@ class SentientMappingScheduledTask {
 
             override fun connectionLost(cause: Throwable?) {
                 log.severe("Connection lost")
-                log.info("Restart connection")
-
-                val mqttSubscribeAsyncTask = MQTTSubscribeAsyncTask(topic, this)
-                SimpleAsyncTaskExecutor().execute(mqttSubscribeAsyncTask)
             }
 
             override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                log.severe("Delivery complete")
+                log.info("Delivery complete")
             }
         }
 
