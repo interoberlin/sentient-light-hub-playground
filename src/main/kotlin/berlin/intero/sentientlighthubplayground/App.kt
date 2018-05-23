@@ -8,11 +8,11 @@ import java.util.logging.Logger
 
 @SpringBootApplication
 @EnableScheduling
-class SentientLightHubPlaygroundApplication
+class App
 
 fun main(args: Array<String>) {
-    runApplication<SentientLightHubPlaygroundApplication>(*args)
-    val log = Logger.getLogger(SentientLightHubPlaygroundApplication::class.simpleName)
+    runApplication<App>(*args)
+    val log = Logger.getLogger(App::class.simpleName)
 
     log.info("Sentient Light Hub Playground")
 }
