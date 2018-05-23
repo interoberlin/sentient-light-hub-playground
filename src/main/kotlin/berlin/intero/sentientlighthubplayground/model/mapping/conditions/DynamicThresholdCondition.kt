@@ -1,5 +1,6 @@
 package berlin.intero.sentientlighthubplayground.model.mapping.conditions
 
+import berlin.intero.sentientlighthubplayground.SentientProperties
 import java.util.logging.Logger
 
 /**
@@ -25,19 +26,21 @@ data class DynamicThresholdCondition(
         val averageValue = values[0]
         val currentValue = values[1]
 
-        log.fine("checkerboardID $checkerboardID")
-        log.fine("this.checkerboardID ${this.checkerboardID}")
-        log.fine("averageValue $averageValue")
-        log.fine("currentValue $currentValue")
-        log.fine("dynamicThreshold $dynamicThreshold")
+        log.info("${SentientProperties.ANSI_CYAN}checkerboardID $checkerboardID${SentientProperties.ANSI_RESET}")
+        log.info("${SentientProperties.ANSI_CYAN}this.checkerboardID ${this.checkerboardID}${SentientProperties.ANSI_RESET}")
+        log.info("${SentientProperties.ANSI_CYAN}averageValue $averageValue${SentientProperties.ANSI_RESET}")
+        log.info("${SentientProperties.ANSI_CYAN}currentValue $currentValue${SentientProperties.ANSI_RESET}")
+        log.info("${SentientProperties.ANSI_CYAN}dynamicThreshold $dynamicThreshold${SentientProperties.ANSI_RESET}")
 
         if (this.checkerboardID == checkerboardID && currentValue != null && averageValue != null) {
-            return when (thresholdType) {
+            when (thresholdType) {
                 EThresholdType.ABOVE_AVERAGE -> {
-                    currentValue > averageValue + dynamicThreshold
+                    log.info("${SentientProperties.ANSI_YELLOW}fulfilled ABOVE_AVERAGE${SentientProperties.ANSI_RESET}")
+                    return currentValue > averageValue + dynamicThreshold
                 }
                 EThresholdType.BELOW_AVERAGE -> {
-                    currentValue < averageValue - dynamicThreshold
+                    log.info("${SentientProperties.ANSI_YELLOW}fulfilled BELOW_AVERAGE${SentientProperties.ANSI_RESET}")
+                    return currentValue < averageValue - dynamicThreshold
                 }
             }
         }

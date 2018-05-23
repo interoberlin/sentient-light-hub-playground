@@ -82,7 +82,7 @@ class SentientMappingScheduledTask {
     fun map() {
         log.info("-- SENTIENT MAPPING TASK")
 
-        ConfigurationController.mappingConfig?.mappings?.forEach { mapping ->
+        ConfigurationController.mappingsConfig?.mappings?.forEach { mapping ->
 
             // Call SentientMappingEvaluationAsyncTask
             SimpleAsyncTaskExecutor().execute(SentientMappingEvaluationAsyncTask(

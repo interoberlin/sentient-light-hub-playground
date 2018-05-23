@@ -22,55 +22,78 @@ object ConfigurationController {
     private const val actorConfigFileName = "actors.json"
     private const val mappingConfigFileName = "mappings.json"
 
-    var sensorConfig: SensorConfig? = null
-    var actorConfig: ActorConfig? = null
-    var mappingConfig: MappingConfig? = null
+    var sensorsConfig: SensorConfig? = null
+    var actorsConfig: ActorConfig? = null
+    var mappingsConfig: MappingConfig? = null
 
     init {
-        loadSensorsConfig(sensorConfigFileName)
-        loadActorsConfig(actorConfigFileName)
-        loadMappingConfig(mappingConfigFileName)
+        loadSensorsConfigFile(sensorConfigFileName)
+        loadActorsConfigFile(actorConfigFileName)
+        loadMappingsConfigFile(mappingConfigFileName)
     }
 
-    fun loadSensorsConfig(configFileName: String) = try {
-        val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream(configFileName), Charset.defaultCharset())
-        this.sensorConfig = GsonBuilder().create().fromJson(result, SensorConfig::class.java) as SensorConfig
+    fun loadSensorsConfig(value: String) = try {
+        this.sensorsConfig = GsonBuilder().create().fromJson(value, SensorConfig::class.java) as SensorConfig
     } catch (ex: Exception) {
         when (ex) {
-            is IOException -> log.severe("$ex")
             is JsonSyntaxException -> log.severe("$ex")
             else -> throw ex
         }
     }
 
-    fun loadActorsConfig(configFileName: String) = try {
-        val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream(configFileName), Charset.defaultCharset())
-        this.actorConfig = GsonBuilder().create().fromJson(result, ActorConfig::class.java) as ActorConfig
+    fun loadSensorsConfigFile(configFileName: String) = try {
+        val value = IOUtils.toString(javaClass.classLoader.getResourceAsStream(configFileName), Charset.defaultCharset())
+        loadSensorsConfig(value)
     } catch (ex: Exception) {
         when (ex) {
             is IOException -> log.severe("$ex")
+            else -> throw ex
+        }
+    }
+
+    fun loadActorsConfig(value: String) = try {
+        this.actorsConfig = GsonBuilder().create().fromJson(value, ActorConfig::class.java) as ActorConfig
+    } catch (ex: Exception) {
+        when (ex) {
             is JsonSyntaxException -> log.severe("$ex")
             else -> throw ex
         }
     }
 
-    fun loadMappingConfig(configFileName: String) = try {
-        val result = IOUtils.toString(javaClass.getClassLoader().getResourceAsStream(configFileName), Charset.defaultCharset())
+    fun loadActorsConfigFile(configFileName: String) = try {
+        val value = IOUtils.toString(javaClass.classLoader.getResourceAsStream(configFileName), Charset.defaultCharset())
+        loadActorsConfig(value)
+    } catch (ex: Exception) {
+        when (ex) {
+            is IOException -> log.severe("$ex")
+            else -> throw ex
+        }
+    }
 
-        val gsonBuilder = GsonBuilder()
-
+    fun loadMappingsConfig(value: String) = try {
         val gson = GsonBuilder()
         gson.registerTypeAdapter(Fulfillable::class.java, FulfillableDeserializer())
-        this.mappingConfig = gson.create().fromJson(result, MappingConfig::class.java) as MappingConfig
+        this.mappingsConfig = gson.create().fromJson(value, MappingConfig::class.java) as MappingConfig
+    } catch (ex: Exception) {
+        when (ex) {
+            is JsonSyntaxException -> log.severe("$ex")
+            else -> throw ex
+        }
+    }
+
+    fun loadMappingsConfigFile(configFileName: String) = try {
+        val value = IOUtils.toString(javaClass.classLoader.getResourceAsStream(configFileName), Charset.defaultCharset())
+        loadMappingsConfig(value)
     } catch (e: IOException) {
         log.severe("$e")
     }
 
     fun getActor(stripID: Int?, ledID: Int?): ActorDevice? {
-        return actorConfig?.actorDevices?.filter { d ->
-            d.strips.any { s ->
-                s.index == stripID && s.leds.any { l ->
-                    l.index == ledID }
+        return actorsConfig?.actorDevices?.filter { d ->
+            d.strips.any { (stripIndex, _, leds) ->
+                stripIndex == stripID && leds.any { (ledIndex) ->
+                    ledIndex == ledID
+                }
             }
         }?.firstOrNull()
     }

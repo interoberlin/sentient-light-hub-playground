@@ -6,6 +6,7 @@ import berlin.intero.sentientlighthubplayground.controller.SentientController
 import berlin.intero.sentientlighthubplayground.controller.TinybController
 import berlin.intero.sentientlighthubplayground.exceptions.BluetoothConnectionException
 import berlin.intero.sentientlighthubplayground.tasks.async.MQTTPublishAsyncTask
+import com.google.gson.Gson
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.task.SimpleAsyncTaskExecutor
 import org.springframework.scheduling.annotation.Scheduled
@@ -19,7 +20,12 @@ import java.util.logging.Logger
  * <li> calls {@link MQTTPublishAsyncTask} to publish the characteristics' values to a MQTT broker
  */
 @Component
+<<<<<<< HEAD
 @ConditionalOnProperty("sentient.readsensor.enabled", havingValue = "true", matchIfMissing = false)class GATTReadSensorScheduledTask {
+=======
+@ConditionalOnProperty(value = "sentient.readsensor.enabled", havingValue = "true", matchIfMissing = false)
+class GATTReadSensorScheduledTask {
+>>>>>>> c0f3189bd68bb8de81683fc41314bdd5bcf3bdd8
 
     companion object {
         private val log: Logger = Logger.getLogger(GATTReadSensorScheduledTask::class.simpleName)
@@ -31,21 +37,33 @@ import java.util.logging.Logger
         log.info("-- GATT READ SENSOR TASK")
 
         val scannedDevices = TinybController.scannedDevices
-        val intendedDevices = ConfigurationController.sensorConfig?.devices
+        val intendedDevices = ConfigurationController.sensorsConfig?.sensorDevices
+
+        log.info("Show scannedDevices ${Gson().toJson(scannedDevices.map { d -> d.address })}")
+        log.info("Show intendedDevices ${Gson().toJson(intendedDevices?.map { d -> d.address })}")
 
         // Iterate over intended devices
         intendedDevices?.forEach { intendedDevice ->
             try {
+                log.info("Intended device ${intendedDevice.address}")
+
                 val device = scannedDevices.first { d -> d.address == intendedDevice.address }
 
                 // Ensure connection
                 TinybController.ensureConnection(device)
+
+                // Show services
+                // TinybController.showServices(device)
 
                 // Read raw value
                 val rawValue = TinybController.readCharacteristic(device, SentientProperties.CHARACTERISTIC_SENSOR)
 
                 // Parse values
                 val parsedValues = SentientController.parse(rawValue)
+
+                // parsedValues.forEachIndexed{index, pv ->
+                //     log.info("Value $index $pv");
+                // }
 
                 // Publish values
                 intendedDevice.sensors.forEach { s ->

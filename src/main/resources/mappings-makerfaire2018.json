@@ -12,18 +12,6 @@
         "ledID": "1",
         "value": "1"
       }
-    }, {
-      "condition": {
-        "conditionType": "DYNAMIC_THRESHOLD",
-        "thresholdType": "ABOVE_AVERAGE",
-        "checkerboardID": "X2",
-        "dynamicThreshold": 0
-      },
-      "action": {
-        "stripID": "N1",
-        "ledID": "1",
-        "value": "0"
-      }
     }
   ]
 }

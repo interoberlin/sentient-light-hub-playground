@@ -47,7 +47,6 @@ repositories {
 
 
 dependencies {
-    // compile("com.intel:tinyb:0.5.0")
     compile('org.springframework.boot:spring-boot-starter')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")

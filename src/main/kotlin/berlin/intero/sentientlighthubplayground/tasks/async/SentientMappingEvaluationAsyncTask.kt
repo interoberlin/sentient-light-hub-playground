@@ -51,6 +51,8 @@ class SentientMappingEvaluationAsyncTask(
         }
 
         if (fulfilled) {
+            log.info("${SentientProperties.ANSI_YELLOW_BACKGROUND}----- TRIGGERED ----- ${SentientProperties.ANSI_RESET}")
+
             action.apply {
                 val topic = "${SentientProperties.TOPIC_LED}/${action.stripID}/${action.ledID}"
 
