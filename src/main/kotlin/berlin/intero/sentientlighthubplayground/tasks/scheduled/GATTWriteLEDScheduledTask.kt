@@ -49,7 +49,7 @@ class GATTWriteLEDScheduledTask {
 
     @Scheduled(fixedDelay = SentientProperties.SENTIENT_MAPPING_DELAY)
     fun map() {
-        log.info("-- GATT WRITE LED TASK")
+        log.info("${SentientProperties.ANSI_GREEN}-- GATT WRITE LED TASK${SentientProperties.ANSI_RESET}")
 
         values.forEach { topic, value ->
             log.info("Recent value $topic > $value")

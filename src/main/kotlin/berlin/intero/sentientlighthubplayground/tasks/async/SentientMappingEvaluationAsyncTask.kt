@@ -26,7 +26,7 @@ class SentientMappingEvaluationAsyncTask(
     }
 
     override fun run() {
-        log.info("-- SENTIENT MAPPING EVALUATION TASK")
+        log.info("${SentientProperties.ANSI_GREEN}-- SENTIENT MAPPING EVALUATION TASK${SentientProperties.ANSI_RESET}")
 
         val condition = mapping.condition
         val action = mapping.action

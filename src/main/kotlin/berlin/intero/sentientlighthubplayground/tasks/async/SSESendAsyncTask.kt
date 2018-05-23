@@ -1,5 +1,6 @@
 package berlin.intero.sentientlighthubplayground.tasks.async
 
+import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.controller.SseController
 import berlin.intero.sentientlighthubplayground.model.SensorEvent
 import com.google.gson.Gson
@@ -22,7 +23,7 @@ class SSESendAsyncTask(
     }
 
     override fun run() {
-        log.info("-- SSE SEND TASK")
+        log.info("${SentientProperties.ANSI_GREEN}-- SSE SEND TASK${SentientProperties.ANSI_RESET}")
         log.fine("topic/value $topic / $value")
 
         val event = SensorEvent(topic, value, Date())

@@ -21,7 +21,7 @@ class MQTTSubscribeAsyncTask(
     }
 
     override fun run() {
-        log.info("-- MQTT SUBSCRIBE TASK")
+        log.info("${SentientProperties.ANSI_GREEN}-- MQTT SUBSCRIBE TASK${SentientProperties.ANSI_RESET}")
         log.fine("topic $topic")
 
         MqttController.subscribe(SentientProperties.MQTT_SERVER_URI, topic, callback)

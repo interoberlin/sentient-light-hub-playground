@@ -2,7 +2,6 @@ package berlin.intero.sentientlighthubplayground.tasks.async
 
 import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.controller.ConfigurationController
-import berlin.intero.sentientlighthubplayground.model.mapping.Mapping
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallback
 import org.eclipse.paho.client.mqttv3.MqttMessage
@@ -80,6 +79,6 @@ class SentientPropertiesAsyncTask() : Runnable {
     }
 
     override fun run() {
-        log.info("-- SENTIENT PROPERTIES TASK")
+        log.info("${SentientProperties.ANSI_GREEN}-- SENTIENT PROPERTIES TASK${SentientProperties.ANSI_RESET}")
     }
 }

@@ -1,5 +1,6 @@
 package berlin.intero.sentientlighthubplayground.tasks.async
 
+import berlin.intero.sentientlighthubplayground.SentientProperties
 import berlin.intero.sentientlighthubplayground.controller.TinybController
 import berlin.intero.sentientlighthubplayground.exceptions.BluetoothConnectionException
 import tinyb.BluetoothException
@@ -23,7 +24,7 @@ class GATTWriteSensorAsyncTask(
     }
 
     override fun run() {
-        log.info("-- GATT WRITE SENSOR TASK")
+        log.info("${SentientProperties.ANSI_GREEN}-- GATT WRITE SENSOR TASK${SentientProperties.ANSI_RESET}")
 
         val scannedDevices = TinybController.scannedDevices
 

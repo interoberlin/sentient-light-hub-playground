@@ -21,7 +21,7 @@ class GATTScanDevicesScheduledTask {
     @Scheduled(fixedRate = SentientProperties.SENSORS_SCAN_RATE)
     @SuppressWarnings("unused")
     fun scanDevices() {
-        log.info("-- GATT SCAN SENSORS TASK")
+        log.info("${SentientProperties.ANSI_GREEN}-- GATT SCAN SENSORS TASK${SentientProperties.ANSI_RESET}")
 
         TinybController.scanDevices()
         TinybController.showDevices(TinybController.scannedDevices)

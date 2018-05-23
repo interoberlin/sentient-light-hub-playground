@@ -22,7 +22,7 @@ class MQTTPublishAsyncTask(
     }
 
     override fun run() {
-        log.info("-- MQTT PUBLISH TASK")
+        log.info("${SentientProperties.ANSI_GREEN}-- MQTT PUBLISH TASK${SentientProperties.ANSI_RESET}")
         log.fine("topic/value $topic / $value")
 
         val event = SensorEvent(topic, value, Date())

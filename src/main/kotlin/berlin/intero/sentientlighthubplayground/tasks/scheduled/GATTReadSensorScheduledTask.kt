@@ -20,12 +20,7 @@ import java.util.logging.Logger
  * <li> calls {@link MQTTPublishAsyncTask} to publish the characteristics' values to a MQTT broker
  */
 @Component
-<<<<<<< HEAD
 @ConditionalOnProperty("sentient.readsensor.enabled", havingValue = "true", matchIfMissing = false)class GATTReadSensorScheduledTask {
-=======
-@ConditionalOnProperty(value = "sentient.readsensor.enabled", havingValue = "true", matchIfMissing = false)
-class GATTReadSensorScheduledTask {
->>>>>>> c0f3189bd68bb8de81683fc41314bdd5bcf3bdd8
 
     companion object {
         private val log: Logger = Logger.getLogger(GATTReadSensorScheduledTask::class.simpleName)
@@ -34,7 +29,7 @@ class GATTReadSensorScheduledTask {
     @Scheduled(fixedDelay = SentientProperties.SENSOR_READ_DELAY)
     @SuppressWarnings("unused")
     fun readSensor() {
-        log.info("-- GATT READ SENSOR TASK")
+        log.info("${SentientProperties.ANSI_GREEN}-- GATT READ SENSOR TASK${SentientProperties.ANSI_RESET}")
 
         val scannedDevices = TinybController.scannedDevices
         val intendedDevices = ConfigurationController.sensorsConfig?.sensorDevices

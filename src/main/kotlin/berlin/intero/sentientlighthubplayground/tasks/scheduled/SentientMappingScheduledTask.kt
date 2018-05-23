@@ -80,7 +80,7 @@ class SentientMappingScheduledTask {
     @Scheduled(fixedDelay = SentientProperties.SENTIENT_MAPPING_DELAY)
     @SuppressWarnings("unused")
     fun map() {
-        log.info("-- SENTIENT MAPPING TASK")
+        log.info("${SentientProperties.ANSI_GREEN}-- SENTIENT MAPPING TASK${SentientProperties.ANSI_RESET}")
 
         ConfigurationController.mappingsConfig?.mappings?.forEach { mapping ->
 
