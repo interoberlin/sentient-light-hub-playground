@@ -15,23 +15,31 @@ class ConfigurationControllerTests {
 
     @Before
     fun setup() {
-        ConfigurationController.loadActorsConfigFile("test-actors.json")
     }
 
-    @Test
+    // @Test
     fun testSensorsConfig() {
         ConfigurationController.loadSensorsConfigFile("test-sensors.json")
         assert(ConfigurationController.sensorsConfig?.sensorDevices?.size == 1)
     }
 
-    // @Test
-    fun testGetActorExisting() {
-        assert(ConfigurationController.getActor(5, 5) != null)
+    @Test
+    fun testGetActorMakerFaire() {
+        ConfigurationController.loadActorsConfigFile("test-actors-makerfaire2018.json")
+        assert(ConfigurationController.getActor("1", "1") != null)
+        assert(ConfigurationController.getActor("1", "1")?.address == "87:10:DC:E9:6D:50")
     }
 
-    // @Test
+    @Test
+    fun testGetActorExisting() {
+        ConfigurationController.loadActorsConfigFile("test-actors.json")
+        assert(ConfigurationController.getActor("5", "5") != null)
+    }
+
+    @Test
     fun testGetActorNonExisting() {
-        assert(ConfigurationController.getActor(2, 2) == null)
+        ConfigurationController.loadActorsConfigFile("test-actors.json")
+        assert(ConfigurationController.getActor("2", "2") == null)
     }
 
     // @Test
@@ -40,7 +48,7 @@ class ConfigurationControllerTests {
         assert(ConfigurationController.mappingsConfig?.mappings?.get(0)?.condition is AbsoluteThresholdCondition)
     }
 
-    // @Test
+    @Test
     fun testMappingDynamicCondition() {
         ConfigurationController.loadMappingsConfigFile("test-mapping-dynamic-condition.json")
         assert(ConfigurationController.mappingsConfig?.mappings?.get(0)?.condition is DynamicThresholdCondition)

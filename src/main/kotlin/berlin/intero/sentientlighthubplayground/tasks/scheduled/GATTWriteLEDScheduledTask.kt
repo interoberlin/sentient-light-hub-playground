@@ -52,12 +52,14 @@ class GATTWriteLEDScheduledTask {
         log.info("${SentientProperties.ANSI_GREEN}-- GATT WRITE LED TASK${SentientProperties.ANSI_RESET}")
 
         values.forEach { topic, value ->
-            log.info("Recent value $topic > $value")
+
 
             val stripID = topic.split('/')[1]
             val ledID = topic.split('/')[2]
 
-            val actor = ConfigurationController.getActor(stripID.toIntOrNull(), ledID.toIntOrNull())
+            val actor = ConfigurationController.getActor(stripID, ledID)
+
+            log.info("${SentientProperties.ANSI_CYAN}topic $topic / val $value / strip $stripID / ledID $ledID / actor ${actor?.address}")
 
             if (actor != null) {
                 val address = actor.address

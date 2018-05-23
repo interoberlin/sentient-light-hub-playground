@@ -1,7 +1,7 @@
 package berlin.intero.sentientlighthubplayground.model.actor
 
 data class Strip(
-        val index: Int,
+        val index: String,
         val direction: EDirection,
         val leds: List<LED>
 )

@@ -47,12 +47,15 @@ class SentientMappingEvaluationAsyncTask(
                 val value = valuesCurrent[checkerboardID]
 
                 fulfilled = condition.isFulfilled(checkerboardID, averageValue?.toIntOrNull(), value?.toIntOrNull())
+
+                if (fulfilled) {
+                    log.info("${SentientProperties.ANSI_BLACK}${SentientProperties.ANSI_YELLOW_BACKGROUND}----- TRIGGERED ----- ${SentientProperties.ANSI_RESET}")
+                    log.info("${SentientProperties.ANSI_YELLOW}log.info(\"${SentientProperties.ANSI_YELLOW}${condition.thresholdType}  ${SentientProperties.ANSI_RESET}\")\n${SentientProperties.ANSI_RESET}")
+                }
             }
         }
 
         if (fulfilled) {
-            log.info("${SentientProperties.ANSI_YELLOW_BACKGROUND}----- TRIGGERED ----- ${SentientProperties.ANSI_RESET}")
-
             action.apply {
                 val topic = "${SentientProperties.TOPIC_LED}/${action.stripID}/${action.ledID}"
 

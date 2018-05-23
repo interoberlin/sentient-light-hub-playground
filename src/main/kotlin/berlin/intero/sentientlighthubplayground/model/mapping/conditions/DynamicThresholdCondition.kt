@@ -26,20 +26,14 @@ data class DynamicThresholdCondition(
         val averageValue = values[0]
         val currentValue = values[1]
 
-        log.info("${SentientProperties.ANSI_CYAN}checkerboardID $checkerboardID${SentientProperties.ANSI_RESET}")
-        log.info("${SentientProperties.ANSI_CYAN}this.checkerboardID ${this.checkerboardID}${SentientProperties.ANSI_RESET}")
-        log.info("${SentientProperties.ANSI_CYAN}averageValue $averageValue${SentientProperties.ANSI_RESET}")
-        log.info("${SentientProperties.ANSI_CYAN}currentValue $currentValue${SentientProperties.ANSI_RESET}")
-        log.info("${SentientProperties.ANSI_CYAN}dynamicThreshold $dynamicThreshold${SentientProperties.ANSI_RESET}")
+        log.info("${SentientProperties.ANSI_CYAN}avg $averageValue / cur $currentValue / thresh $dynamicThreshold / type $thresholdType ${SentientProperties.ANSI_RESET}")
 
         if (this.checkerboardID == checkerboardID && currentValue != null && averageValue != null) {
             when (thresholdType) {
                 EThresholdType.ABOVE_AVERAGE -> {
-                    log.info("${SentientProperties.ANSI_YELLOW}fulfilled ABOVE_AVERAGE${SentientProperties.ANSI_RESET}")
                     return currentValue > averageValue + dynamicThreshold
                 }
                 EThresholdType.BELOW_AVERAGE -> {
-                    log.info("${SentientProperties.ANSI_YELLOW}fulfilled BELOW_AVERAGE${SentientProperties.ANSI_RESET}")
                     return currentValue < averageValue - dynamicThreshold
                 }
             }

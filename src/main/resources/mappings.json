@@ -8,7 +8,7 @@
         "dynamicThreshold": 300
       },
       "action": {
-        "stripID": "N1",
+        "stripID": "1",
         "ledID": "1",
         "value": "1"
       }
@@ -20,7 +20,7 @@
         "dynamicThreshold": 0
       },
       "action": {
-        "stripID": "N1",
+        "stripID": "1",
         "ledID": "1",
         "value": "0"
       }

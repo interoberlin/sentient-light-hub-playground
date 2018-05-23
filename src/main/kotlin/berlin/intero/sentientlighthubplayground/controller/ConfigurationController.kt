@@ -88,11 +88,13 @@ object ConfigurationController {
         log.severe("$e")
     }
 
-    fun getActor(stripID: Int?, ledID: Int?): ActorDevice? {
+    fun getActor(stripID: String?, ledID: String?): ActorDevice? {
+        log.info("getActor stripID $stripID / ledID $ledID")
+
         return actorsConfig?.actorDevices?.filter { d ->
             d.strips.any { (stripIndex, _, leds) ->
-                stripIndex == stripID && leds.any { (ledIndex) ->
-                    ledIndex == ledID
+                stripID != null && stripIndex == stripID && leds.any { (ledIndex) ->
+                    ledID != null && ledID == ledIndex
                 }
             }
         }?.firstOrNull()
