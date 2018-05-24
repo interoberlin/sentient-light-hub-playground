@@ -8,20 +8,11 @@ This proof-of-concept app demonstrates all the features of _Sentient Light Hub_.
 * Communication with MQTT broker
 * Mapping engine
 
-
-### Features
-
-tbd
-
-### Planned features
-
-tbd
-
 ## Development
 
 ### Compilation
 
-This application can be compiled using the following command. The created jar file can be found in ./build/libs
+This app can be compiled using the following command. The created jar file can be found in ./build/libs
 
 ```
 ./gradlew bootJar
@@ -29,19 +20,28 @@ This application can be compiled using the following command. The created jar fi
 
 ### Configuration
 
+The app can be configured in two different places
 
+* ```src/main/resources/application.properties``` contains boolean values that can be used to enable/disable different parts of the app
+* ```src/main/kotlin/berlin/intero/sentientlighthubplayground/SentientProperties``` contains default values for
+  * GATT ID for services and characteristics
+  * MQTT connection parameters and topic names
+  * Scheduled tasks rates/delay in milliseconds
+    * *SENSORS_SCAN_RATE* how often there is a GATT scan for new devices
+    * *SENSOR_READ_DELAY* how often values are read from a GATT device
+    * *SENTIENT_MAPPING_DELAY* how often the mapping engine evaluates measured values
 
 ### Launch
 
-During development this application can be launched in two ways
+During development this app can be launched in two ways
 
-* Compile the application running the command above and start jar file
+* Compile the app running the command above and start jar file
 
 ```
 java -jar ./build/libs/sentient-light-hub-playground-0.0.1-SNAPSHOT.jar
 ```
 
-* Run the application using gradle
+* Run the app using gradle
 
 ```
 ./gradlew bootRun
@@ -51,7 +51,7 @@ java -jar ./build/libs/sentient-light-hub-playground-0.0.1-SNAPSHOT.jar
 
 ### Service
 
-This application can be run as a systemd service using the following command
+This app can be run as a systemd service using the following command
 
 ```
 systemctl start sentient-light-hub-playground.service
