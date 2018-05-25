@@ -26,10 +26,10 @@ class SentientProperties {
 
         const val SENSORS_SCAN_RATE = 300_000L
         const val SENSOR_READ_RATE = 100L
-        const val SENSOR_READ_DELAY = 20_000L
+        const val SENSOR_READ_DELAY = 1_000L
         // const val SENSOR_READ_DELAY = 10_000L
         const val SENTIENT_MAPPING_RATE = 100L
-        const val SENTIENT_MAPPING_DELAY = 20_000L
+        const val SENTIENT_MAPPING_DELAY = 1_000L
         // const val SENTIENT_MAPPING_DELAY = 10_000L
 
         var VALUE_HISTORY = 50
